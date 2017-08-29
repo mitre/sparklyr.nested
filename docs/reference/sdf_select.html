@@ -87,7 +87,8 @@
     <p>The <code>select</code> function works well for keeping/dropping top level fields. It does not
 however support access to nested data. This function will accept complex field names
 such as <code>x.y.z</code> where <code>z</code> is a field nested within <code>y</code> which is in turn
-nested within <code>x</code>.</p>
+nested within <code>x</code>. Since R uses "$" to access nested elements and java/scala use ".",
+<code>sdf_select(data, x.y.z)</code> and <code>sdf_select(data, x$y$z)</code> are equivalent.</p>
     
 
     <pre class="usage"><span class='fu'>sdf_select</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='no'>aliases</span>)

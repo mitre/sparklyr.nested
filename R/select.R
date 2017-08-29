@@ -3,7 +3,8 @@
 #' The \code{select} function works well for keeping/dropping top level fields. It does not
 #' however support access to nested data. This function will accept complex field names
 #' such as \code{x.y.z} where \code{z} is a field nested within \code{y} which is in turn
-#' nested within \code{x}.
+#' nested within \code{x}. Since R uses "$" to access nested elements and java/scala use ".",
+#' \code{sdf_select(data, x.y.z)} and \code{sdf_select(data, x$y$z)} are equivalent.
 #' 
 #' @param x An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.
 #' @param ... Fields to select
