@@ -4,6 +4,7 @@ output:
     keep_md: true
 ---
 
+[![Build Status](https://travis-ci.org/mitre/sparklyr.nested.svg?branch=master)](https://travis-ci.org/mitre/sparklyr.nested)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
