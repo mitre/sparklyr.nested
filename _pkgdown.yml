@@ -1,0 +1,19 @@
+templates:
+  params:
+    bootswatch: cerulean
+    
+home:
+  links:
+  - text: Source
+    href: https://github.com/mitre/sparklyr.nested
+
+navbar:
+  type: inverse
+  left:
+    - text: "Reference"
+      href: reference/index.html
+  right:
+    - icon: fa-question-circle fa-lg
+      href: https://github.com/mitre/sparklyr.nested/issues
+    - icon: fa-github fa-lg
+      href: https://github.com/mitre/sparklyr.nested
