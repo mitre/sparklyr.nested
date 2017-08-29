@@ -52,8 +52,9 @@ sdf_explode_ <- function(x, column, keep_all=FALSE) {
   })
   
   # do select
-  outdf <- sdf %>% 
-    invoke("select", columns) 
+  # outdf <- sdf %>% 
+  #   invoke("select", columns) 
+  outdf <- invoke(sdf, "select", columns) 
   
   # regisger new table
   sdf_register(outdf)

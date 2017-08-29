@@ -29,21 +29,22 @@ sdf_schema_json <- function(x, simplify=FALSE, append_complex_type=TRUE){
 
 #' @rdname sdf_schema_json
 #' @export
-#' 
+#' @importFrom listviewer jsonedit
 #' @examples
 #' \dontrun{
 #' library(testthat)
 #' library(jsonlite)
 #' library(sparklyr)
 #' library(sparklyr.nested)
-#' sample_json <- paste0('{"aircraft_id":["string"],"phase_sequence":["string"],"phases (array)":{"start_point (struct)":',
-#'                       '{"segment_phase":["string"],"agl":["double"],"elevation":["double"],"time":["long"],',
-#'                       '"latitude":["double"],"longitude":["double"],"altitude":["double"],"course":["double"],',
-#'                       '"speed":["double"],"source_point_keys (array)":["[string]"],"primary_key":["string"]},',
-#'                       '"end_point (struct)":{"segment_phase":["string"],"agl":["double"],"elevation":["double"],',
-#'                       '"time":["long"],"latitude":["double"],"longitude":["double"],"altitude":["double"],',
-#'                       '"course":["double"],"speed":["double"],"source_point_keys (array)":["[string]"],',
-#'                       '"primary_key":["string"]},"phase":["string"],"primary_key":["string"]},"primary_key":["string"]}')
+#' sample_json <- paste0(
+#'   '{"aircraft_id":["string"],"phase_sequence":["string"],"phases (array)":{"start_point (struct)":',
+#'   '{"segment_phase":["string"],"agl":["double"],"elevation":["double"],"time":["long"],',
+#'   '"latitude":["double"],"longitude":["double"],"altitude":["double"],"course":["double"],',
+#'   '"speed":["double"],"source_point_keys (array)":["[string]"],"primary_key":["string"]},',
+#'   '"end_point (struct)":{"segment_phase":["string"],"agl":["double"],"elevation":["double"],',
+#'   '"time":["long"],"latitude":["double"],"longitude":["double"],"altitude":["double"],',
+#'   '"course":["double"],"speed":["double"],"source_point_keys (array)":["[string]"],',
+#'   '"primary_key":["string"]},"phase":["string"],"primary_key":["string"]},"primary_key":["string"]}')
 #' 
 #' with_mock(
 #'   # I am mocking functions so that the example works without a real spark connection
@@ -59,11 +60,7 @@ sdf_schema_json <- function(x, simplify=FALSE, append_complex_type=TRUE){
 #' }
 sdf_schema_viewer <- function(x, simplify=TRUE,  append_complex_type=TRUE) {
   schema <- sdf_schema_json(x, simplify=simplify, append_complex_type=append_complex_type)
- 
-  if (!require(listviewer))
-    stop("Unable to view description without the 'listviewer' package installed")
-  
-  listviewer::jsonedit(schema) 
+  jsonedit(schema) 
 }
 
 #' @keywords internal
