@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Authors • sparklyr.nested</title>
+<title>Explode data along a column — sdf_explode • sparklyr.nested</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -20,9 +20,9 @@
 
 
 <!-- pkgdown -->
-<link href="pkgdown.css" rel="stylesheet">
-<script src="jquery.sticky-kit.min.js"></script>
-<script src="pkgdown.js"></script>
+<link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script>
+<script src="../pkgdown.js"></script>
   
   
 <!-- mathjax -->
@@ -37,7 +37,7 @@
   </head>
 
   <body>
-    <div class="container template-authors">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -47,12 +47,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">sparklyr.nested</a>
+      <a class="navbar-brand" href="../index.html">sparklyr.nested</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
       
@@ -78,26 +78,59 @@
       </header>
 
       <div class="row">
-  <div class="contents col-md-12">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Authors</h1>
+    <h1>Explode data along a column</h1>
     </div>
 
-    <ul class="list-unstyled">
-      <li>
-        <p><strong>Matt Pollock</strong>. Author, maintainer.
-        </p>
-      </li>
-      <li>
-        <p><strong> The MITRE Corporation</strong>. Copyright holder.
-        </p>
-      </li>
-    </ul>
+    
+    <p>Exploding an array column of length <code>N</code> will replicate the top level record <code>N</code> times.
+The ith replicated record will contain a struct (not an array) corresponding to the ith element
+of the exploded array. Exploding will not promote any fields or otherwise change the schema of
+the data.</p>
+    
+
+    <pre class="usage"><span class='fu'>sdf_explode</span>(<span class='no'>x</span>, <span class='no'>column</span>, <span class='kw'>keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>sdf_explode_</span>(<span class='no'>x</span>, <span class='no'>column</span>, <span class='kw'>keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>An object (usually a <code>spark_tbl</code>) coercable to a Spark DataFrame.</p></td>
+    </tr>
+    <tr>
+      <th>column</th>
+      <td><p>The column to explode</p></td>
+    </tr>
+    <tr>
+      <th>keep_all</th>
+      <td><p>Logical. If <code>FALSE</code> then records where the exploded value is empty/null
+will be dropped.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Two types of exploding are possible. The default method calls the scala <code>explode</code> method.
+This operation is supported in both Spark version &gt; 1.6. It will however drop records where the
+exploding field is empty/null. Alternatively <code>keep_all=TRUE</code> will use the <code>explode_outer</code>
+scala method introduced in spark 2 to not drop any records.</p>
+    
 
   </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#details">Details</a></li>
+          </ul>
 
+  </div>
 </div>
-
 
       <footer>
       <div class="copyright">

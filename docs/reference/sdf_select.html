@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Authors • sparklyr.nested</title>
+<title>Select nested items — sdf_select • sparklyr.nested</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -20,9 +20,9 @@
 
 
 <!-- pkgdown -->
-<link href="pkgdown.css" rel="stylesheet">
-<script src="jquery.sticky-kit.min.js"></script>
-<script src="pkgdown.js"></script>
+<link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script>
+<script src="../pkgdown.js"></script>
   
   
 <!-- mathjax -->
@@ -37,7 +37,7 @@
   </head>
 
   <body>
-    <div class="container template-authors">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -47,12 +47,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">sparklyr.nested</a>
+      <a class="navbar-brand" href="../index.html">sparklyr.nested</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
       
@@ -78,26 +78,56 @@
       </header>
 
       <div class="row">
-  <div class="contents col-md-12">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Authors</h1>
+    <h1>Select nested items</h1>
     </div>
 
-    <ul class="list-unstyled">
-      <li>
-        <p><strong>Matt Pollock</strong>. Author, maintainer.
-        </p>
-      </li>
-      <li>
-        <p><strong> The MITRE Corporation</strong>. Copyright holder.
-        </p>
-      </li>
-    </ul>
+    
+    <p>The <code>select</code> function works well for keeping/dropping top level fields. It does not
+however support access to nested data. This function will accept complex field names
+such as <code>x.y.z</code> where <code>z</code> is a field nested within <code>y</code> which is in turn
+nested within <code>x</code>.</p>
+    
+
+    <pre class="usage"><span class='fu'>sdf_select</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='no'>aliases</span>)
+
+<span class='fu'>sdf_select_</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='no'>.dots</span>, <span class='no'>aliases</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>An object (usually a <code>spark_tbl</code>) coercable to a Spark DataFrame.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Fields to select</p></td>
+    </tr>
+    <tr>
+      <th>aliases</th>
+      <td><p>Character. Optional. If provided these names will be matched positionally with
+select fields provided in <code>...</code>. This is more useful when calling from a function and
+less natural to use when calling the function directly. The alternative with direct calls
+is to put the alias on the left side of the expression (e.g. <code>sdf_select(df, fld_alias=parent.child.fld)</code>)</p></td>
+    </tr>
+    <tr>
+      <th>.dots</th>
+      <td><p>List. Treated just like <code>...</code> except that the named arguments are in a list</p></td>
+    </tr>
+    </table>
+    
 
   </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+                </ul>
 
+  </div>
 </div>
-
 
       <footer>
       <div class="copyright">

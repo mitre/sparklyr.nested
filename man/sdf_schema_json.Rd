@@ -22,6 +22,34 @@ be included in the return value for array and struct types.}
 \description{
 Work with the schema
 }
+\examples{
+\dontrun{
+library(testthat)
+library(jsonlite)
+library(sparklyr)
+library(sparklyr.nested)
+sample_json <- paste0('{"aircraft_id":["string"],"phase_sequence":["string"],"phases (array)":{"start_point (struct)":',
+                      '{"segment_phase":["string"],"agl":["double"],"elevation":["double"],"time":["long"],',
+                      '"latitude":["double"],"longitude":["double"],"altitude":["double"],"course":["double"],',
+                      '"speed":["double"],"source_point_keys (array)":["[string]"],"primary_key":["string"]},',
+                      '"end_point (struct)":{"segment_phase":["string"],"agl":["double"],"elevation":["double"],',
+                      '"time":["long"],"latitude":["double"],"longitude":["double"],"altitude":["double"],',
+                      '"course":["double"],"speed":["double"],"source_point_keys (array)":["[string]"],',
+                      '"primary_key":["string"]},"phase":["string"],"primary_key":["string"]},"primary_key":["string"]}')
+
+with_mock(
+  # I am mocking functions so that the example works without a real spark connection
+  spark_read_parquet = function(x, ...){return("this is a spark dataframe")},
+  sdf_schema_json = function(x, ...){return(fromJSON(sample_json))},
+  spark_connect = function(...){return("this is a spark connection")},
+  
+  # the meat of the example is here
+  sc <- spark_connect(),
+  spark_data <- spark_read_parquet(sc, path="path/to/data/*.parquet", name="some_name"),
+  sdf_schema_viewer(spark_data)
+)
+}
+}
 \seealso{
 \code{\link[sparklyr]{sdf_schema}}
 }

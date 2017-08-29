@@ -29,6 +29,34 @@ sdf_schema_json <- function(x, simplify=FALSE, append_complex_type=TRUE){
 
 #' @rdname sdf_schema_json
 #' @export
+#' 
+#' @examples
+#' \dontrun{
+#' library(testthat)
+#' library(jsonlite)
+#' library(sparklyr)
+#' library(sparklyr.nested)
+#' sample_json <- paste0('{"aircraft_id":["string"],"phase_sequence":["string"],"phases (array)":{"start_point (struct)":',
+#'                       '{"segment_phase":["string"],"agl":["double"],"elevation":["double"],"time":["long"],',
+#'                       '"latitude":["double"],"longitude":["double"],"altitude":["double"],"course":["double"],',
+#'                       '"speed":["double"],"source_point_keys (array)":["[string]"],"primary_key":["string"]},',
+#'                       '"end_point (struct)":{"segment_phase":["string"],"agl":["double"],"elevation":["double"],',
+#'                       '"time":["long"],"latitude":["double"],"longitude":["double"],"altitude":["double"],',
+#'                       '"course":["double"],"speed":["double"],"source_point_keys (array)":["[string]"],',
+#'                       '"primary_key":["string"]},"phase":["string"],"primary_key":["string"]},"primary_key":["string"]}')
+#' 
+#' with_mock(
+#'   # I am mocking functions so that the example works without a real spark connection
+#'   spark_read_parquet = function(x, ...){return("this is a spark dataframe")},
+#'   sdf_schema_json = function(x, ...){return(fromJSON(sample_json))},
+#'   spark_connect = function(...){return("this is a spark connection")},
+#'   
+#'   # the meat of the example is here
+#'   sc <- spark_connect(),
+#'   spark_data <- spark_read_parquet(sc, path="path/to/data/*.parquet", name="some_name"),
+#'   sdf_schema_viewer(spark_data)
+#' )
+#' }
 sdf_schema_viewer <- function(x, simplify=TRUE,  append_complex_type=TRUE) {
   schema <- sdf_schema_json(x, simplify=simplify, append_complex_type=append_complex_type)
  

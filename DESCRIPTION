@@ -1,8 +1,11 @@
 Package: sparklyr.nested
 Title: A sparklyr extension for nested data
 Version: 0.0.2
-Authors@R: c(person("Matt", "Pollock", email = "mpollock@mitre.org", role = c("aut", "cre")),
-             person(family = "The MITRE Corporation", role = c("cph")))
+Authors@R: c(
+    person("Matt", "Pollock", email = "mpollock@mitre.org", role = c("aut", "cre")),
+    person(family = "The MITRE Corporation", role = c("cph"))
+    )
+Maintainer: Matt Pollock <mpollock@mitre.org>
 Description: A sparklyr extension adding the capability to work easily with nested data using
              dot and dollar sign notation.
 Depends: R (>= 3.3.2)
