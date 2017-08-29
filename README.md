@@ -4,6 +4,13 @@
 
 A package to extend the capabilities available in the open source `sparklyr` package with support for working with nested data.
 
+## Installation
+
+
+```r
+devtools::install_github("mitre/sparklyr.nested")
+```
+
 ## Nested Operations
 
 The `sparklyr` package makes working with Spark in R easy.
@@ -22,6 +29,10 @@ The following example uses the mocking functionality from `testthat` so that the
 The key line is `sdf_schema_viewer(spark_data)` where `spark_data` is a Spark data frame.
 
 
+```
+## Warning: Installed Rcpp (0.12.12) different from Rcpp used to build dplyr (0.12.10).
+## Please reinstall dplyr to avoid random crashes or undefined behavior.
+```
 
 ```r
 with_mock(
@@ -37,8 +48,8 @@ with_mock(
 )
 ```
 
-<!--html_preserve--><div id="htmlwidget-7800" style="width:672px;height:480px;" class="jsonedit html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7800">{"x":{"data":{"aircraft_id":"string","phase_sequence":"string","phases (array)":{"start_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"end_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"phase":"string","primary_key":"string"},"primary_key":"string"},"options":{"mode":"tree","modes":["code","form","text","tree","view"]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-5054" style="width:672px;height:480px;" class="jsonedit html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5054">{"x":{"data":{"aircraft_id":"string","phase_sequence":"string","phases (array)":{"start_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"end_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"phase":"string","primary_key":"string"},"primary_key":"string"},"options":{"mode":"tree","modes":["code","form","text","tree","view"]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 This example only goes a few levels deep.
 This is not a restriction though.

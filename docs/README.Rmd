@@ -11,12 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 A package to extend the capabilities available in the open source `sparklyr` package with support for working with nested data.
 
-## Installation
-
-```{r, eval=FALSE}
-devtools::install_github("mitre/sparklyr.nested")
-```
-
 ## Nested Operations
 
 The `sparklyr` package makes working with Spark in R easy.
