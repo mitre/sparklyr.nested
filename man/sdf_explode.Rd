@@ -5,14 +5,19 @@
 \alias{sdf_explode_}
 \title{Explode data along a column}
 \usage{
-sdf_explode(x, column, keep_all = FALSE)
+sdf_explode(x, column, is_map = FALSE, keep_all = FALSE)
 
-sdf_explode_(x, column, keep_all = FALSE)
+sdf_explode_(x, column, is_map = FALSE, keep_all = FALSE)
 }
 \arguments{
 \item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}
 
 \item{column}{The column to explode}
+
+\item{is_map}{Logical. The (scala) \code{explode} method works for both \code{array} and \code{map}
+column types. If the column to explode in an array, then \code{is_map=FALSE} will ensure that
+the exploded output retains the name of the array column. If however the column to explode is
+a map, then the map will have key/value names that will be used if \code{is_map=TRUE}.}
 
 \item{keep_all}{Logical. If \code{FALSE} then records where the exploded value is empty/null
 will be dropped.}

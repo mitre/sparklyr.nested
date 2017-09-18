@@ -28,14 +28,15 @@ library(testthat)
 library(jsonlite)
 library(sparklyr)
 library(sparklyr.nested)
-sample_json <- paste0('{"aircraft_id":["string"],"phase_sequence":["string"],"phases (array)":{"start_point (struct)":',
-                      '{"segment_phase":["string"],"agl":["double"],"elevation":["double"],"time":["long"],',
-                      '"latitude":["double"],"longitude":["double"],"altitude":["double"],"course":["double"],',
-                      '"speed":["double"],"source_point_keys (array)":["[string]"],"primary_key":["string"]},',
-                      '"end_point (struct)":{"segment_phase":["string"],"agl":["double"],"elevation":["double"],',
-                      '"time":["long"],"latitude":["double"],"longitude":["double"],"altitude":["double"],',
-                      '"course":["double"],"speed":["double"],"source_point_keys (array)":["[string]"],',
-                      '"primary_key":["string"]},"phase":["string"],"primary_key":["string"]},"primary_key":["string"]}')
+sample_json <- paste0(
+  '{"aircraft_id":["string"],"phase_sequence":["string"],"phases (array)":{"start_point (struct)":',
+  '{"segment_phase":["string"],"agl":["double"],"elevation":["double"],"time":["long"],',
+  '"latitude":["double"],"longitude":["double"],"altitude":["double"],"course":["double"],',
+  '"speed":["double"],"source_point_keys (array)":["[string]"],"primary_key":["string"]},',
+  '"end_point (struct)":{"segment_phase":["string"],"agl":["double"],"elevation":["double"],',
+  '"time":["long"],"latitude":["double"],"longitude":["double"],"altitude":["double"],',
+  '"course":["double"],"speed":["double"],"source_point_keys (array)":["[string]"],',
+  '"primary_key":["string"]},"phase":["string"],"primary_key":["string"]},"primary_key":["string"]}')
 
 with_mock(
   # I am mocking functions so that the example works without a real spark connection

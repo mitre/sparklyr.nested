@@ -12,6 +12,10 @@
 #' 
 #' @param x An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.
 #' @param column The column to explode
+#' @param is_map Logical. The (scala) \code{explode} method works for both \code{array} and \code{map}
+#'   column types. If the column to explode in an array, then \code{is_map=FALSE} will ensure that
+#'   the exploded output retains the name of the array column. If however the column to explode is
+#'   a map, then the map will have key/value names that will be used if \code{is_map=TRUE}.
 #' @param keep_all Logical. If \code{FALSE} then records where the exploded value is empty/null
 #'   will be dropped.
 #' @export
