@@ -15,11 +15,11 @@
 #' @param keep_all Logical. If \code{FALSE} then records where the exploded value is empty/null
 #'   will be dropped.
 #' @export
-sdf_explode <- function(x, column, keep_all=FALSE) {
+sdf_explode <- function(x, column, is_map=FALSE, keep_all=FALSE) {
   
   col_name <- deparse(substitute(column))
   
-  return(sdf_explode_(x, col_name, keep_all=keep_all))
+  return(sdf_explode_(x, col_name, is_map=is_map, keep_all=keep_all))
 }
 
 #' @rdname sdf_explode
@@ -29,7 +29,7 @@ sdf_explode <- function(x, column, keep_all=FALSE) {
 #' @importFrom sparklyr spark_connection
 #' @importFrom sparklyr sdf_register
 #' @export
-sdf_explode_ <- function(x, column, keep_all=FALSE) {
+sdf_explode_ <- function(x, column, is_map=FALSE, keep_all=FALSE) {
   
   sdf <- spark_dataframe(x)
   sc <- spark_connection(x)
@@ -42,10 +42,11 @@ sdf_explode_ <- function(x, column, keep_all=FALSE) {
   columns <- lapply(cols, function(field) {
     sdf_col <- invoke(sdf, "col", field)
     if (field == column) {
-      sdf_col_tmp <- invoke_static(sc, method=scala_method, 
-                                   class="org.apache.spark.sql.functions", 
-                                   sdf_col)
-      sdf_col <- invoke(sdf_col_tmp, "alias", field)
+      sdf_col <- invoke_static(sc, method=scala_method, 
+                               class="org.apache.spark.sql.functions", 
+                               sdf_col)
+      if (!is_map)
+        sdf_col <- invoke(sdf_col, "alias", field)
     }
     
     return(sdf_col)
