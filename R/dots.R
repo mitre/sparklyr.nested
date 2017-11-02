@@ -10,11 +10,15 @@
 #' @importFrom lazyeval lazy_dots
 convert_dots_to_strings <- function(...) {
   
+  # parse dots
   dots <- lazyeval::lazy_dots(...)
   txt <- vector(mode = "character", length=length(dots))
   for (i in seq_along(dots)) {
     txt[i] <- parse_name_to_string(dots[[i]])
   }
+  
+  # add names back in
+  names(txt) <- names(dots)
   
   return(txt)
 }
