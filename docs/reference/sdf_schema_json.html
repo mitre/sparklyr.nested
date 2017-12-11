@@ -122,14 +122,15 @@ be included in the return value for array and struct types.</p></td>
 <span class='fu'>library</span>(<span class='no'>jsonlite</span>)
 <span class='fu'>library</span>(<span class='no'>sparklyr</span>)
 <span class='fu'>library</span>(<span class='no'>sparklyr.nested</span>)
-<span class='no'>sample_json</span> <span class='kw'>&lt;-</span> <span class='fu'>paste0</span>(<span class='st'>'{"aircraft_id":["string"],"phase_sequence":["string"],"phases (array)":{"start_point (struct)":'</span>,
-                      <span class='st'>'{"segment_phase":["string"],"agl":["double"],"elevation":["double"],"time":["long"],'</span>,
-                      <span class='st'>'"latitude":["double"],"longitude":["double"],"altitude":["double"],"course":["double"],'</span>,
-                      <span class='st'>'"speed":["double"],"source_point_keys (array)":["[string]"],"primary_key":["string"]},'</span>,
-                      <span class='st'>'"end_point (struct)":{"segment_phase":["string"],"agl":["double"],"elevation":["double"],'</span>,
-                      <span class='st'>'"time":["long"],"latitude":["double"],"longitude":["double"],"altitude":["double"],'</span>,
-                      <span class='st'>'"course":["double"],"speed":["double"],"source_point_keys (array)":["[string]"],'</span>,
-                      <span class='st'>'"primary_key":["string"]},"phase":["string"],"primary_key":["string"]},"primary_key":["string"]}'</span>)
+<span class='no'>sample_json</span> <span class='kw'>&lt;-</span> <span class='fu'>paste0</span>(
+  <span class='st'>'{"aircraft_id":["string"],"phase_sequence":["string"],"phases (array)":{"start_point (struct)":'</span>,
+  <span class='st'>'{"segment_phase":["string"],"agl":["double"],"elevation":["double"],"time":["long"],'</span>,
+  <span class='st'>'"latitude":["double"],"longitude":["double"],"altitude":["double"],"course":["double"],'</span>,
+  <span class='st'>'"speed":["double"],"source_point_keys (array)":["[string]"],"primary_key":["string"]},'</span>,
+  <span class='st'>'"end_point (struct)":{"segment_phase":["string"],"agl":["double"],"elevation":["double"],'</span>,
+  <span class='st'>'"time":["long"],"latitude":["double"],"longitude":["double"],"altitude":["double"],'</span>,
+  <span class='st'>'"course":["double"],"speed":["double"],"source_point_keys (array)":["[string]"],'</span>,
+  <span class='st'>'"primary_key":["string"]},"phase":["string"],"primary_key":["string"]},"primary_key":["string"]}'</span>)
 
 <span class='fu'><a href='http://www.rdocumentation.org/packages/testthat/topics/with_mock'>with_mock</a></span>(
   <span class='co'># I am mocking functions so that the example works without a real spark connection</span>

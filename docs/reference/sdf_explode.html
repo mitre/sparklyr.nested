@@ -90,9 +90,9 @@ of the exploded array. Exploding will not promote any fields or otherwise change
 the data.</p>
     
 
-    <pre class="usage"><span class='fu'>sdf_explode</span>(<span class='no'>x</span>, <span class='no'>column</span>, <span class='kw'>keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>sdf_explode</span>(<span class='no'>x</span>, <span class='no'>column</span>, <span class='kw'>is_map</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>sdf_explode_</span>(<span class='no'>x</span>, <span class='no'>column</span>, <span class='kw'>keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>sdf_explode_</span>(<span class='no'>x</span>, <span class='no'>column</span>, <span class='kw'>is_map</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -104,6 +104,13 @@ the data.</p>
     <tr>
       <th>column</th>
       <td><p>The column to explode</p></td>
+    </tr>
+    <tr>
+      <th>is_map</th>
+      <td><p>Logical. The (scala) <code>explode</code> method works for both <code>array</code> and <code>map</code>
+column types. If the column to explode in an array, then <code>is_map=FALSE</code> will ensure that
+the exploded output retains the name of the array column. If however the column to explode is
+a map, then the map will have key/value names that will be used if <code>is_map=TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>keep_all</th>

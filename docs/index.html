@@ -54,7 +54,7 @@
 <!--/.navbar -->
 
       
-      </header><script src="index_files/htmlwidgets-0.6/htmlwidgets.js"></script><link href="index_files/jsoneditor-5.5.5/jsoneditor.min.css" rel="stylesheet">
+      </header><script src="index_files/htmlwidgets-0.8/htmlwidgets.js"></script><link href="index_files/jsoneditor-5.5.5/jsoneditor.min.css" rel="stylesheet">
 <script src="index_files/jsoneditor-5.5.5/jsoneditor.min.js"></script><script src="index_files/jsonedit-binding-1.4.0/jsonedit.js"></script><div class="row">
   <div class="col-md-9">
     
@@ -100,8 +100,8 @@
   spark_data &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/sparklyr/topics/spark_read_parquet">spark_read_parquet</a></span>(sc, <span class="dt">path=</span><span class="st">"path/to/data/*.parquet"</span>, <span class="dt">name=</span><span class="st">"some_name"</span>),
   <span class="kw"><a href="reference/sdf_schema_json.html">sdf_schema_viewer</a></span>(spark_data)
 )</code></pre></div>
-<div id="htmlwidget-1710" style="width:672px;height:480px;" class="jsonedit html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1710">{"x":{"data":{"aircraft_id":"string","phase_sequence":"string","phases (array)":{"start_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"end_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"phase":"string","primary_key":"string"},"primary_key":"string"},"options":{"mode":"tree","modes":["code","form","text","tree","view"]}},"evals":[],"jsHooks":[]}</script><p>It is also handy to use the schema viewer to quickly inspect what a pipeline of operations is going to return. This enables you to anticipate the structure of the output you are going to get (and make sure the operations are valid with respect to schema modification) without doing any actual computation on your data. For example:</p>
+<div id="htmlwidget-1bf89961a30db97d56a8" style="width:672px;height:480px;" class="jsonedit html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1bf89961a30db97d56a8">{"x":{"data":{"aircraft_id":"string","phase_sequence":"string","phases (array)":{"start_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"end_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"phase":"string","primary_key":"string"},"primary_key":"string"},"options":{"mode":"tree","modes":["code","form","text","tree","view"]}},"evals":[],"jsHooks":[]}</script><p>It is also handy to use the schema viewer to quickly inspect what a pipeline of operations is going to return. This enables you to anticipate the structure of the output you are going to get (and make sure the operations are valid with respect to schema modification) without doing any actual computation on your data. For example:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">spark_data %&gt;%
 <span class="st">  </span><span class="kw"><a href="reference/sdf_unnest.html">sdf_unnest</a></span>(phases) %&gt;%
 <span class="st">  </span><span class="kw">select</span>(aircraft_id, start_point) %&gt;%
