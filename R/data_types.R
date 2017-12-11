@@ -1,3 +1,38 @@
+#' Spark Data Types
+#' 
+#' These function support supplying a spark read schema. This is particularly useful
+#' when reading data with nested arrays when you are not interested in several of 
+#' the nested fields.
+#' 
+#' @importFrom sparklyr invoke_new
+#' @importFrom sparklyr invoke
+#' @export
+struct_type <- function(sc, struct_fields) {
+  struct <- invoke_new(sc,
+                       class="org.apache.spark.sql.types.StructType")
+  
+  if (is.list(struct_fields)) {
+    for (i in 1:length(struct_fields))
+      struct <- invoke(struct, "add", struct_fields[[i]])
+  } else {
+    struct <- invoke(struct, "add", struct_fields)
+  }
+  
+  return(struct)
+}
+
+#' @rdname struct_type
+#' @importFrom sparklyr invoke_new
+#' @export
+struct_field <- function(sc, name, data_type, nullable=FALSE) {
+  metadata <- invoke_static(sc, 
+                            class="org.apache.spark.sql.types.Metadata", 
+                            method="empty")
+  invoke_new(sc,
+             class="org.apache.spark.sql.types.StructField",
+             name, data_type, nullable, metadata)
+}
+
 #' @rdname struct_type
 #' @importFrom sparklyr invoke_new
 #' @export
@@ -11,81 +46,56 @@ array_type <- function(sc, data_type, nullable=FALSE) {
 #' @importFrom sparklyr invoke_new
 #' @export
 binary_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.BinaryType")
+  invoke_static(sc, "sparklyr.SQLUtils", "getSQLDataType", "binary")
 }
 
 #' @rdname struct_type
 #' @importFrom sparklyr invoke_new
 #' @export
 boolean_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.BooleanType")
+  invoke_static(sc, "sparklyr.SQLUtils", "getSQLDataType", "boolean")
 }
 
 #' @rdname struct_type
 #' @importFrom sparklyr invoke_new
 #' @export
 byte_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.ByteType")
-}
-
-#' @rdname struct_type
-#' @importFrom sparklyr invoke_new
-#' @export
-calendar_interval_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.CalendarIntervalType")
-}
-
-#' @rdname struct_type
-#' @importFrom sparklyr invoke_new
-#' @export
-char_type <- function(sc, length) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.CharType",
-             as.integer(length))
+  invoke_static(sc, "sparklyr.SQLUtils", "getSQLDataType", "byte")
 }
 
 #' @rdname struct_type
 #' @importFrom sparklyr invoke_new
 #' @export
 date_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.DateType")
+  invoke_static(sc, "sparklyr.SQLUtils", "getSQLDataType", "date")
 }
 
 #' @rdname struct_type
 #' @importFrom sparklyr invoke_new
 #' @export
 double_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.DoubleType")
+  invoke_static(sc, "sparklyr.SQLUtils", "getSQLDataType", "double")
 }
 
 #' @rdname struct_type
 #' @importFrom sparklyr invoke_new
 #' @export
 float_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.FloatType")
+  invoke_static(sc, "sparklyr.SQLUtils", "getSQLDataType", "float")
 }
 
 #' @rdname struct_type
 #' @importFrom sparklyr invoke_new
 #' @export
 integer_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.IntegerType")
+  invoke_static(sc, "sparklyr.SQLUtils", "getSQLDataType", "integer")
 }
 
 #' @rdname struct_type
 #' @importFrom sparklyr invoke_new
 #' @export
-long_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.LongType")
+numeric_type <- function(sc) {
+  invoke_static(sc, "sparklyr.SQLUtils", "getSQLDataType", "numeric")
 }
 
 #' @rdname struct_type
@@ -100,68 +110,20 @@ map_type <- function(sc, key_type, value_type, nullable=FALSE) {
 #' @rdname struct_type
 #' @importFrom sparklyr invoke_new
 #' @export
-null_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.NullType")
-}
-
-#' @rdname struct_type
-#' @importFrom sparklyr invoke_new
-#' @export
-short_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.ShortType")
-}
-
-#' @rdname struct_type
-#' @importFrom sparklyr invoke_new
-#' @export
 string_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.StringType")
+  invoke_static(sc, "sparklyr.SQLUtils", "getSQLDataType", "string")
 }
 
 #' @rdname struct_type
 #' @importFrom sparklyr invoke_new
 #' @export
-struct_field <- function(sc, name, data_type, nullable=FALSE) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.StructField",
-             name, data_type, nullable, NULL)
-}
-
-#' Spark Data Types
-#' 
-#' These function support supplying a spark read schema. This is particularly useful
-#' when reading data with nested arrays when you are not interested in several of 
-#' the nested fields.
-#' 
-#' @importFrom sparklyr invoke_new
-#' @importFrom sparklyr invoke
-#' @export
-struct_type <- function(sc, struct_fields) {
-  struct <- invoke_new(sc,
-                       class="org.apache.spark.sql.types.StructType")
-  
-  for (i in 1:length(struct_fields))
-    struct <- invoke(struct, "add", struct_fields[[i]])
-  
-  return(struct)
+character_type <- function(sc) {
+  invoke_static(sc, "sparklyr.SQLUtils", "getSQLDataType", "character")
 }
 
 #' @rdname struct_type
 #' @importFrom sparklyr invoke_new
 #' @export
 timestamp_type <- function(sc) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.TimestampType")
-}
-
-#' @rdname struct_type
-#' @importFrom sparklyr invoke_new
-#' @export
-varchar_type <- function(sc, length) {
-  invoke_new(sc,
-             class="org.apache.spark.sql.types.VarcharType",
-            as.integer(length))
+  invoke_static(sc, "sparklyr.SQLUtils", "getSQLDataType", "timestamp")
 }
