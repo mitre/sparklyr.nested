@@ -128,7 +128,7 @@ the nested fields.</p>
     </tr>
     <tr>
       <th>struct_fields</th>
-      <td><p>A vector or fields obtained from <code>struct_field</code></p></td>
+      <td><p>A vector or fields obtained from <code>struct_field()</code></p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -136,11 +136,19 @@ the nested fields.</p>
     </tr>
     <tr>
       <th>data_type</th>
-      <td><p>A (java) data type (e.g., <code>string_type</code> or <code>double_type</code>)</p></td>
+      <td><p>A (java) data type (e.g., <code>string_type()</code> or <code>double_type()</code>)</p></td>
     </tr>
     <tr>
       <th>nullable</th>
       <td><p>Logical. Describes whether field can be missing for some rows.</p></td>
+    </tr>
+    <tr>
+      <th>key_type</th>
+      <td><p>A (java) data type describing the map keys (usually <code>string_type()</code>)</p></td>
+    </tr>
+    <tr>
+      <th>value_type</th>
+      <td><p>A (java) data type describing the map values</p></td>
     </tr>
     </table>
     

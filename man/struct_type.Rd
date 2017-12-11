@@ -51,13 +51,17 @@ timestamp_type(sc)
 \arguments{
 \item{sc}{A \code{spark_connection}}
 
-\item{struct_fields}{A vector or fields obtained from \code{struct_field}}
+\item{struct_fields}{A vector or fields obtained from \code{struct_field()}}
 
 \item{name}{A field name to use in the output struct type}
 
-\item{data_type}{A (java) data type (e.g., \code{string_type} or \code{double_type})}
+\item{data_type}{A (java) data type (e.g., \code{string_type()} or \code{double_type()})}
 
 \item{nullable}{Logical. Describes whether field can be missing for some rows.}
+
+\item{key_type}{A (java) data type describing the map keys (usually \code{string_type()})}
+
+\item{value_type}{A (java) data type describing the map values}
 }
 \description{
 These function support supplying a spark read schema. This is particularly useful

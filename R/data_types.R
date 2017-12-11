@@ -5,7 +5,7 @@
 #' the nested fields.
 #' 
 #' @param sc A \code{spark_connection}
-#' @param struct_fields A vector or fields obtained from \code{struct_field}
+#' @param struct_fields A vector or fields obtained from \code{struct_field()}
 #' @importFrom sparklyr invoke_new
 #' @importFrom sparklyr invoke
 #' @export
@@ -25,7 +25,7 @@ struct_type <- function(sc, struct_fields) {
 
 #' @rdname struct_type
 #' @param name A field name to use in the output struct type
-#' @param data_type A (java) data type (e.g., \code{string_type} or \code{double_type})
+#' @param data_type A (java) data type (e.g., \code{string_type()} or \code{double_type()})
 #' @param nullable Logical. Describes whether field can be missing for some rows.
 #' @importFrom sparklyr invoke_static
 #' @importFrom sparklyr invoke_new
@@ -105,6 +105,8 @@ numeric_type <- function(sc) {
 }
 
 #' @rdname struct_type
+#' @param key_type A (java) data type describing the map keys (usually \code{string_type()})
+#' @param value_type A (java) data type describing the map values
 #' @importFrom sparklyr invoke_new
 #' @export
 map_type <- function(sc, key_type, value_type, nullable=FALSE) {
