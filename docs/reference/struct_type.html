@@ -118,12 +118,38 @@ the nested fields.</p>
 <span class='fu'>character_type</span>(<span class='no'>sc</span>)
 
 <span class='fu'>timestamp_type</span>(<span class='no'>sc</span>)</pre>
-        
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>sc</th>
+      <td><p>A <code>spark_connection</code></p></td>
+    </tr>
+    <tr>
+      <th>struct_fields</th>
+      <td><p>A vector or fields obtained from <code>struct_field</code></p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>A field name to use in the output struct type</p></td>
+    </tr>
+    <tr>
+      <th>data_type</th>
+      <td><p>A (java) data type (e.g., <code>string_type</code> or <code>double_type</code>)</p></td>
+    </tr>
+    <tr>
+      <th>nullable</th>
+      <td><p>Logical. Describes whether field can be missing for some rows.</p></td>
+    </tr>
+    </table>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
                 </ul>
 
   </div>

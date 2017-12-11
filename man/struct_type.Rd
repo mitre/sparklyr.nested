@@ -48,6 +48,17 @@ character_type(sc)
 
 timestamp_type(sc)
 }
+\arguments{
+\item{sc}{A \code{spark_connection}}
+
+\item{struct_fields}{A vector or fields obtained from \code{struct_field}}
+
+\item{name}{A field name to use in the output struct type}
+
+\item{data_type}{A (java) data type (e.g., \code{string_type} or \code{double_type})}
+
+\item{nullable}{Logical. Describes whether field can be missing for some rows.}
+}
 \description{
 These function support supplying a spark read schema. This is particularly useful
 when reading data with nested arrays when you are not interested in several of 
