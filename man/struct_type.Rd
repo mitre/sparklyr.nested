@@ -12,6 +12,7 @@
 \alias{float_type}
 \alias{integer_type}
 \alias{numeric_type}
+\alias{long_type}
 \alias{map_type}
 \alias{string_type}
 \alias{character_type}
@@ -39,6 +40,8 @@ float_type(sc)
 integer_type(sc)
 
 numeric_type(sc)
+
+long_type(sc)
 
 map_type(sc, key_type, value_type, nullable = FALSE)
 

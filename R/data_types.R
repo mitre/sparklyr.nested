@@ -105,6 +105,13 @@ numeric_type <- function(sc) {
 }
 
 #' @rdname struct_type
+#' @importFrom sparklyr invoke_static
+#' @export
+long_type <- function(sc) {
+  invoke_static(sc, "sparklyr.SQLUtils", "getSQLDataType", "long")
+}
+
+#' @rdname struct_type
 #' @param key_type A (java) data type describing the map keys (usually \code{string_type()})
 #' @param value_type A (java) data type describing the map values
 #' @importFrom sparklyr invoke_new
