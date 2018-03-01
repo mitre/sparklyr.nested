@@ -3,9 +3,9 @@
 #' This function is designed to behave similarly to \code{tidyr::nest}.
 #' 
 #' Note that calling \code{sdf_nest} will not aggregate and cannot be done
-#' inside of a \code{group_by(...) %>% summarize(..)} operation. To produce
+#' inside of a \code{group_by() %>% summarize()} operation. To produce
 #' a nested array one might use \code{sdf_nest} in conjunction with the 
-#' \code{collect_list} Spark SQL function:
+#' \code{collect_list} Spark SQL function.
 #' 
 #' @examples 
 #' \dontrun{
