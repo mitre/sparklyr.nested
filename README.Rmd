@@ -2,6 +2,7 @@
 output:
   html_document:
     keep_md: true
+always_allow_html: yes
 ---
 
 [![Build Status](https://travis-ci.org/mitre/sparklyr.nested.svg?branch=master)](https://travis-ci.org/mitre/sparklyr.nested)
