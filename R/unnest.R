@@ -4,7 +4,7 @@
 #' the exploded top level array to the top level. Hence, given \code{a}, an array with fields
 #' \code{a1, a2, a3}, then code{sdf_explode(df, a)} will produce output with each record replicated
 #' for every element in the \code{a} array and with the fields \code{a1, a2, a3} (but not \code{a})
-#' at the top level. Similar to \code{tidyr::explode}.
+#' at the top level. Similar to \code{tidyr::unnest}.
 #' 
 #' Note that this is a less precise tool than using \code{\link{sdf_explode}} and \code{\link{sdf_select}}
 #' directly because all fields of the exploded array will be kept and promoted. Direct calls to these
