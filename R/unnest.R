@@ -37,19 +37,24 @@ sdf_unnest_ <- function(x, column, prepend, prepend_all=FALSE) {
   if (missing(prepend))
     prepend <- paste0(column, "_")
   
-  # first explode along the column to unnest  
-  df <- sdf_explode_(x, column)
+  # first explode along the column to unnest
+  schema <- sdf_schema_json(x, simplify = FALSE, append_complex_type = FALSE)
+  schema <- schema[["fields"]]
+  names(schema) <- unlist(lapply(schema,  function(y){y[[1]]}))
+  fld_type <- get_field_type(schema[[column]])
+  if (fld_type %in% c("array", "map"))
+    x <- sdf_explode_(x, column)
 
   # get nested field columns (representing struct fields, not array fields, since explosion already happened)
   # nested_schema <- df %>%
   #   sdf_select_(column) %>%
   #   sdf_schema_json(simplify=TRUE, append_complex_type=FALSE)
-  nested_schema <- sdf_schema_json(sdf_select_(df, column), simplify=TRUE, append_complex_type=FALSE)
+  nested_schema <- sdf_schema_json(sdf_select_(x, column), simplify=TRUE, append_complex_type=FALSE)
   nested_aliases <- names(nested_schema[[column]])
   nested_select_fields <- paste0(column, ".", nested_aliases)
   
   # get other fields to keep
-  fields <- colnames(df)
+  fields <- colnames(x)
   
   # resolve name conflicts
   if (prepend_all)
@@ -73,5 +78,5 @@ sdf_unnest_ <- function(x, column, prepend, prepend_all=FALSE) {
   aliases <- c(fields[1:ind-1], nested_aliases, fields[(ind+1):length(fields)])
   
   # do select
-  sdf_select_(df, .dots=select_fields, aliases=aliases)
+  sdf_select_(x, .dots=select_fields, aliases=aliases)
 }
