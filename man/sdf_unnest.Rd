@@ -2,12 +2,9 @@
 % Please edit documentation in R/unnest.R
 \name{sdf_unnest}
 \alias{sdf_unnest}
-\alias{sdf_unnest_}
 \title{Unnest data along a column}
 \usage{
-sdf_unnest(x, column, prepend, prepend_all = TRUE)
-
-sdf_unnest_(x, column, prepend, prepend_all = FALSE)
+sdf_unnest(x, column, ..., is_map = FALSE, keep_all = FALSE)
 }
 \arguments{
 \item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}

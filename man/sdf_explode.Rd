@@ -9,7 +9,7 @@ sdf_explode(x, column, is_map = FALSE, keep_all = FALSE)
 \arguments{
 \item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}
 
-\item{column}{The column to explode}
+\item{column}{The field to explode}
 
 \item{is_map}{Logical. The (scala) \code{explode} method works for both \code{array} and \code{map}
 column types. If the column to explode in an array, then \code{is_map=FALSE} will ensure that
