@@ -2,12 +2,9 @@
 % Please edit documentation in R/nest.R
 \name{sdf_nest}
 \alias{sdf_nest}
-\alias{sdf_nest_}
 \title{Nest data in a Spark Dataframe}
 \usage{
 sdf_nest(x, ..., .key = "data")
-
-sdf_nest_(x, columns, .key = "data")
 }
 \arguments{
 \item{x}{A Spark dataframe.}
@@ -15,8 +12,6 @@ sdf_nest_(x, columns, .key = "data")
 \item{...}{Columns to nest.}
 
 \item{.key}{Character. A name for the new column containing nested fields}
-
-\item{columns}{Character vector. Columns to nest.}
 }
 \description{
 This function is designed to behave similarly to \code{tidyr::nest}.

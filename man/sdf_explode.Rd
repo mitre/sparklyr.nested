@@ -32,7 +32,7 @@ exploding field is empty/null. Alternatively \code{keep_all=TRUE} will use the \
 scala method introduced in spark 2 to not drop any records.
 }
 \examples{
-#' \dontrun{
+\dontrun{
 # first get some nested data
 iris2 <- copy_to(sc, iris, name="iris")
 iris_nst <- iris2 \%>\%

@@ -21,17 +21,11 @@
 #' @param x A Spark dataframe.
 #' @param ... Columns to nest.
 #' @param .key Character. A name for the new column containing nested fields
+#' @importFrom dplyr select_vars
 #' @export
 sdf_nest <- function(x, ..., .key="data") {
   
-  dots <- convert_dots_to_strings(...)
-  sdf_nest_(x, columns=dots, .key=.key)
-}
-
-#' @rdname sdf_nest
-#' @param columns Character vector. Columns to nest.
-#' @export
-sdf_nest_ <- function(x, columns, .key="data") {
+  vars_to_nest <- select_vars(colnames(x), ...)
   
   sdf <- spark_dataframe(x)
   sc <- spark_connection(x)
@@ -42,13 +36,12 @@ sdf_nest_ <- function(x, columns, .key="data") {
   
   for (col in cols) {
     sdf_col <- invoke(sdf, "col", col)
-    if (col %in% columns) {
+    if (col %in% vars_to_nest) {
       nested_columns <- c(nested_columns, sdf_col)
     } else {
       select_columns <- c(select_columns, sdf_col)
     }
   }
-  
   
   nested_column <- invoke_static(sc, method="struct", 
                                  class="org.apache.spark.sql.functions",
