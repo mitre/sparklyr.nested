@@ -27,7 +27,7 @@ This function is designed to behave similarly to \code{tidyr::nest}.
 # each unique species identifier
 iris2 <- copy_to(sc, iris, name="iris")
 iris2 \%>\%
-  sdf_nest(Sepal_Length, Sepal_Width, Petal.Length, Petal.Width, .key="data") \%>\%
+  sdf_nest(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width, .key="data") \%>\%
   group_by(Species) \%>\%
   summarize(data=collect_list(data))
 }
