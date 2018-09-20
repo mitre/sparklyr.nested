@@ -33,6 +33,7 @@ sdf_unnest <- function(x, column, prepend, prepend_all=TRUE) {
 #' @export
 sdf_unnest_ <- function(x, column, prepend, prepend_all=FALSE) {
 
+  stop("function temporarily broken")
   # default behavior
   if (missing(prepend))
     prepend <- paste0(column, "_")
@@ -44,7 +45,7 @@ sdf_unnest_ <- function(x, column, prepend, prepend_all=FALSE) {
   # nested_schema <- df %>%
   #   sdf_select_(column) %>%
   #   sdf_schema_json(simplify=TRUE, append_complex_type=FALSE)
-  nested_schema <- sdf_schema_json(sdf_select_(df, column), simplify=TRUE, append_complex_type=FALSE)
+  # nested_schema <- sdf_schema_json(sdf_select_(df, column), simplify=TRUE, append_complex_type=FALSE)
   nested_aliases <- names(nested_schema[[column]])
   nested_select_fields <- paste0(column, ".", nested_aliases)
   
@@ -72,6 +73,6 @@ sdf_unnest_ <- function(x, column, prepend, prepend_all=FALSE) {
   select_fields <- c(fields[1:ind-1], nested_select_fields, fields[(ind+1):length(fields)])
   aliases <- c(fields[1:ind-1], nested_aliases, fields[(ind+1):length(fields)])
   
-  # do select
-  sdf_select_(df, .dots=select_fields, aliases=aliases)
+  # # do select
+  # sdf_select_(df, .dots=select_fields, aliases=aliases)
 }

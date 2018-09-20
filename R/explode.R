@@ -11,30 +11,38 @@
 #' scala method introduced in spark 2 to not drop any records.
 #' 
 #' @param x An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.
-#' @param column The column to explode
+#' @param column The field to explode
 #' @param is_map Logical. The (scala) \code{explode} method works for both \code{array} and \code{map}
 #'   column types. If the column to explode in an array, then \code{is_map=FALSE} will ensure that
 #'   the exploded output retains the name of the array column. If however the column to explode is
 #'   a map, then the map will have key/value names that will be used if \code{is_map=TRUE}.
 #' @param keep_all Logical. If \code{FALSE} then records where the exploded value is empty/null
 #'   will be dropped.
+#'
+#' @importFrom rlang enquo quo_name
+#' @importFrom sparklyr invoke invoke_static spark_dataframe spark_connection sdf_register
+#' @importFrom dplyr %>%
 #' @export
+#' 
+#' @examples 
+#' #' \dontrun{
+#' # first get some nested data
+#' iris2 <- copy_to(sc, iris, name="iris")
+#' iris_nst <- iris2 %>%
+#'   sdf_nest(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width, .key="data") %>%
+#'   group_by(Species) %>%
+#'   summarize(data=collect_list(data))
+#' 
+#' # then explode it
+#' iris_nst %>% sdf_explode(data)
+#' }
 sdf_explode <- function(x, column, is_map=FALSE, keep_all=FALSE) {
   
-  col_name <- deparse(substitute(column))
+  # capture column name for field to explode
+  col_quosure <- enquo(column)
+  col_name <- quo_name(col_quosure)
   
-  return(sdf_explode_(x, col_name, is_map=is_map, keep_all=keep_all))
-}
-
-#' @rdname sdf_explode
-#' @importFrom sparklyr invoke
-#' @importFrom sparklyr invoke_static
-#' @importFrom sparklyr spark_dataframe
-#' @importFrom sparklyr spark_connection
-#' @importFrom sparklyr sdf_register
-#' @export
-sdf_explode_ <- function(x, column, is_map=FALSE, keep_all=FALSE) {
-  
+  # get refs
   sdf <- spark_dataframe(x)
   sc <- spark_connection(x)
   
@@ -45,7 +53,7 @@ sdf_explode_ <- function(x, column, is_map=FALSE, keep_all=FALSE) {
   cols <- colnames(x)
   columns <- lapply(cols, function(field) {
     sdf_col <- invoke(sdf, "col", field)
-    if (field == column) {
+    if (field == col_name) {
       sdf_col <- invoke_static(sc, method=scala_method, 
                                class="org.apache.spark.sql.functions", 
                                sdf_col)
@@ -57,10 +65,9 @@ sdf_explode_ <- function(x, column, is_map=FALSE, keep_all=FALSE) {
   })
   
   # do select
-  # outdf <- sdf %>% 
-  #   invoke("select", columns) 
-  outdf <- invoke(sdf, "select", columns) 
-  
+  outdf <- sdf %>%
+    invoke("select", columns)
+
   # regisger new table
   sdf_register(outdf)
   
