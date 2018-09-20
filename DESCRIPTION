@@ -9,7 +9,7 @@ Maintainer: Matt Pollock <mpollock@mitre.org>
 Description: A sparklyr extension adding the capability to work easily with nested data using
              dot and dollar sign notation.
 Depends: R (>= 3.3.2)
-Imports: sparklyr, lazyeval, jsonlite, listviewer
+Imports: sparklyr, lazyeval, jsonlite, listviewer, dplyr
 License: Apache License 2.0 | file LICENSE
 Encoding: UTF-8
 LazyData: true
