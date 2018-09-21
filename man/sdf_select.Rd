@@ -20,6 +20,11 @@ is to put the alias on the left side of the expression (e.g. \code{sdf_select(df
 \item{.drop_parents}{Logical. If \code{TRUE} then any field from which nested elements are extracted
 will be dropped, even if they were included in the selected \code{...}. This better supports using 
 \code{dplyr} field matching helpers like \code{everything()} and \code{starts_with}.}
+
+\item{.full_name}{Logical. If \code{TRUE} then nested field names that are not named (either using
+a LHS \code{name=field_name} construct or the \code{.aliases} argument) will be disambuigated using
+the parent field name. For example \code{sdf_select(df, x.y)} will return a field named \code{x_y}.
+If \code{FALSE} then the parent field name is dropped unless it is needed to avoid duplicate names.}
 }
 \description{
 The \code{select} function works well for keeping/dropping top level fields. It does not
@@ -31,8 +36,9 @@ nested within \code{x}. Since R uses "$" to access nested elements and java/scal
 \section{Selection Helpers}{
 
 
-\code{dplyr} allows the use of selection helpers (e.g., see \code{\link[dplyr]{everything}}). 
-These same helpers are supported for \code{sdf_select}, but not for \code{sdf_select_}.
+\code{dplyr} allows the use of selection helpers (e.g., see \code{\link[dplyr]{everything}}).
+These helpers only work for top level fields however. For now all nested fields that should
+be promoted need to be explicitly identified.
 }
 
 \examples{

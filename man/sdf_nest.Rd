@@ -14,7 +14,10 @@ sdf_nest(x, ..., .key = "data")
 \item{.key}{Character. A name for the new column containing nested fields}
 }
 \description{
-This function is designed to behave similarly to \code{tidyr::nest}.
+This function is like \code{tidyr::nest}. Calling this function will not
+aggregate over other columns. Rather the output has the same number of
+rows/records as the input. See examples of how to achieve row reduction
+by aggregating elements using \code{collect_list}, which is a Spark SQL function
 }
 \examples{
 \dontrun{
