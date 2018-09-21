@@ -4,7 +4,7 @@
 #' the exploded top level array to the top level. Hence, given \code{a}, an array with fields
 #' \code{a1, a2, a3}, then code{sdf_explode(df, a)} will produce output with each record replicated
 #' for every element in the \code{a} array and with the fields \code{a1, a2, a3} (but not \code{a})
-#' at the top level. Similar to \code{tidyr::explode}.
+#' at the top level. Similar to \code{tidyr::unnest}.
 #' 
 #' Note that this is a less precise tool than using \code{\link{sdf_explode}} and \code{\link{sdf_select}}
 #' directly because all fields of the exploded array will be kept and promoted. Direct calls to these
@@ -15,68 +15,45 @@
 #' structure, this function will only reach one layer deep. It may well be that the unnested fields
 #' are themselves nested structures that need to be dealt with accordingly.
 #' 
-#' @param x An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.
-#' @param column The column to unnest
-#' @param prepend Character. In the event that a nested field to be promoted has the same name as an
-#'   existing top level field then this string will be prepended to the field name. The default 
-#'   behavior is to prepend using the name of the field that is being unnested with an underscore.
-#' @param prepend_all Logical. If \code{TRUE} then the \code{prepend} argument will be used for all
-#'   promoted fields even if no name conflict exists.
+#' @inheritParams sdf_explode
+#' 
+#' @importFrom rlang !!! enquo quo_name !!
+#' @importFrom dplyr everything %>%
 #' @export
-sdf_unnest <- function(x, column, prepend, prepend_all=TRUE) {
+#' 
+#' @examples 
+#' \dontrun{
+#' # first get some nested data
+#' iris2 <- copy_to(sc, iris, name="iris")
+#' iris_nst <- iris2 %>%
+#'   sdf_nest(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width, .key="data") %>%
+#'   group_by(Species) %>%
+#'   summarize(data=collect_list(data))
+#' 
+#' # then explode it
+#' iris_nst %>% sdf_unnest(data)
+#' }
+sdf_unnest <- function(x, column, keep_all=FALSE) {
   
-  col_name <- deparse(substitute(column))
-  return(sdf_unnest_(x, column=col_name, prepend=prepend, prepend_all=prepend_all))
-}
-
-#' @rdname sdf_unnest
-#' @export
-sdf_unnest_ <- function(x, column, prepend, prepend_all=FALSE) {
-
-  # default behavior
-  if (missing(prepend))
-    prepend <- paste0(column, "_")
+  col_quosure <- enquo(column)
+  col_name <- quo_name(col_quosure)
   
-  # first explode along the column to unnest
   schema <- sdf_schema_json(x, simplify = FALSE, append_complex_type = FALSE)
   schema <- schema[["fields"]]
   names(schema) <- unlist(lapply(schema,  function(y){y[[1]]}))
   fld_type <- get_field_type(schema[[column]])
-  if (fld_type %in% c("array", "map"))
-    x <- sdf_explode_(x, column)
+  if (fld_type == "array")
+    x <- sdf_explode(x, !!col_quosure, is_map = FALSE, keep_all = keep_all)
+  else if (fld_type == "map")
+    x <- sdf_explode(x, !!col_quosure, is_map = TRUE, keep_all = keep_all)
 
   # get nested field columns (representing struct fields, not array fields, since explosion already happened)
-  # nested_schema <- df %>%
-  #   sdf_select_(column) %>%
-  #   sdf_schema_json(simplify=TRUE, append_complex_type=FALSE)
-  nested_schema <- sdf_schema_json(sdf_select_(x, column), simplify=TRUE, append_complex_type=FALSE)
-  nested_aliases <- names(nested_schema[[column]])
-  nested_select_fields <- paste0(column, ".", nested_aliases)
-  
-  # get other fields to keep
-  fields <- colnames(x)
-  
-  # resolve name conflicts
-  if (prepend_all)
-    id <- rep(TRUE, times=length(nested_aliases))
-  else
-    id <- nested_aliases %in% fields
-
-  if (any(id)) {
-    if (!prepend_all) {
-      message("Field name conflicts detected for nested fields: ", 
-              paste0(nested_aliases[id], collapse=", "),
-              ". These fields will be prepended with ", prepend)
-    }
-    
-    nested_aliases[id] <- paste0(prepend, nested_aliases[id])
-  }
-  
-  # add in other top level fields
-  ind <- which(fields==column)
-  select_fields <- c(fields[1:ind-1], nested_select_fields, fields[(ind+1):length(fields)])
-  aliases <- c(fields[1:ind-1], nested_aliases, fields[(ind+1):length(fields)])
+  nested_schema <- x %>%
+    sdf_select(!!col_quosure) %>%
+    sdf_schema_json(simplify=TRUE, append_complex_type=FALSE)
+  nested_aliases <- names(nested_schema[[col_name]])
+  nested_select_fields <- paste0(col_name, ".", nested_aliases)
   
   # do select
-  sdf_select_(x, .dots=select_fields, aliases=aliases)
+  sdf_select(x, everything(), !!! nested_select_fields, .drop_parents = TRUE)
 }
