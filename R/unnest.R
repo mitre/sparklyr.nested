@@ -49,7 +49,7 @@ sdf_unnest <- function(x, column, keep_all=FALSE) {
   schema <- sdf_schema_json(x, simplify = FALSE, append_complex_type = FALSE)
   schema <- schema[["fields"]]
   names(schema) <- unlist(lapply(schema,  function(y){y[[1]]}))
-  fld_type <- get_field_type(schema[[column]])
+  fld_type <- get_field_type(schema[[col_name]])
   if (fld_type == "array")
     x <- sdf_explode(x, !!col_quosure, is_map = FALSE, keep_all = keep_all)
   else if (fld_type == "map")
