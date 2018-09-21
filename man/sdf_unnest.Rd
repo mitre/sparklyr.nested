@@ -4,24 +4,19 @@
 \alias{sdf_unnest}
 \title{Unnest data along a column}
 \usage{
-sdf_unnest(x, column, is_map = FALSE, keep_all = FALSE)
+sdf_unnest(x, column, keep_all = FALSE)
 }
 \arguments{
 \item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}
 
 \item{column}{The field to explode}
 
-\item{is_map}{Logical. The (scala) \code{explode} method works for both \code{array} and \code{map}
-column types. If the column to explode in an array, then \code{is_map=FALSE} will ensure that
-the exploded output retains the name of the array column. If however the column to explode is
-a map, then the map will have key/value names that will be used if \code{is_map=TRUE}.}
-
 \item{keep_all}{Logical. If \code{FALSE} then records where the exploded value is empty/null
 will be dropped.}
 }
 \description{
-Unnesting is an explode operation coupled with a nested select to promote the sub-fields of
-the exploded top level array to the top level. Hence, given \code{a}, an array with fields
+Unnesting is an (optional) explode operation coupled with a nested select to promote the sub-fields of
+the exploded top level array/map/struct to the top level. Hence, given \code{a}, an array with fields
 \code{a1, a2, a3}, then code{sdf_explode(df, a)} will produce output with each record replicated
 for every element in the \code{a} array and with the fields \code{a1, a2, a3} (but not \code{a})
 at the top level. Similar to \code{tidyr::unnest}.
@@ -35,6 +30,11 @@ are wanted to the top level of the data frame.
 Additionally, though \code{\link{sdf_select}} allows users to reach arbitrarily far into a nested
 structure, this function will only reach one layer deep. It may well be that the unnested fields
 are themselves nested structures that need to be dealt with accordingly.
+
+Note that map types are supported, but there is no \code{is_map} argument. This is because the
+function is doing schema interrogation of the input data anyway to determine whether an explode
+operation is requried (it is of maps and arrays, but not for bare structs). Given this the result
+of the schema interrogation drives the value o \code{is_map} provided to \code{sdf_explode}.
 }
 \examples{
 \dontrun{

@@ -1,7 +1,7 @@
 #' Unnest data along a column
 #' 
-#' Unnesting is an explode operation coupled with a nested select to promote the sub-fields of
-#' the exploded top level array to the top level. Hence, given \code{a}, an array with fields
+#' Unnesting is an (optional) explode operation coupled with a nested select to promote the sub-fields of
+#' the exploded top level array/map/struct to the top level. Hence, given \code{a}, an array with fields
 #' \code{a1, a2, a3}, then code{sdf_explode(df, a)} will produce output with each record replicated
 #' for every element in the \code{a} array and with the fields \code{a1, a2, a3} (but not \code{a})
 #' at the top level. Similar to \code{tidyr::unnest}.
@@ -15,7 +15,15 @@
 #' structure, this function will only reach one layer deep. It may well be that the unnested fields
 #' are themselves nested structures that need to be dealt with accordingly.
 #' 
-#' @inheritParams sdf_explode
+#' Note that map types are supported, but there is no \code{is_map} argument. This is because the
+#' function is doing schema interrogation of the input data anyway to determine whether an explode
+#' operation is requried (it is of maps and arrays, but not for bare structs). Given this the result
+#' of the schema interrogation drives the value o \code{is_map} provided to \code{sdf_explode}.
+#' 
+#' @param x An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.
+#' @param column The field to explode
+#' @param keep_all Logical. If \code{FALSE} then records where the exploded value is empty/null
+#'   will be dropped.
 #' 
 #' @importFrom rlang !!! enquo quo_name !!
 #' @importFrom dplyr everything %>%
