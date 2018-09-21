@@ -62,8 +62,8 @@ with_mock(
 )
 ```
 
-<!--html_preserve--><div id="htmlwidget-a7df7926d87f24946a5d" style="width:672px;height:480px;" class="jsonedit html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a7df7926d87f24946a5d">{"x":{"data":{"aircraft_id":"string","phase_sequence":"string","phases (array)":{"start_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"end_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"phase":"string","primary_key":"string"},"primary_key":"string"},"options":{"mode":"tree","modes":["code","form","text","tree","view"]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-ed9261d6abe4b70afe3d" style="width:672px;height:480px;" class="jsonedit html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ed9261d6abe4b70afe3d">{"x":{"data":{"aircraft_id":"string","phase_sequence":"string","phases (array)":{"start_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"end_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"phase":"string","primary_key":"string"},"primary_key":"string"},"options":{"mode":"tree","modes":["code","form","text","tree","view"]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 It is also handy to use the schema viewer to quickly inspect what a pipeline of operations is going to return.
 This enables you to anticipate the structure of the output you are going to get (and make sure the operations are valid with respect to schema modification) without doing any actual computation on your data.
@@ -162,4 +162,4 @@ There are a few things to notice about how `sdf_unnest` does things:
 
 - It will promote *every* one-level-deep field, even if you only care about a few of them.
 
-- In the event of a name conflict (e.g., there is a top level `primary_key` and a `primary_key` nested inside the `phases` field) then all of the nested fields will be disambuigated using the name of the field in which it was nested.
+- In the event of a name conflict (e.g., there is a top level `primary_key` and a `primary_key` nested inside the `phases` field) then all of the nested fields will be disambiguated using the name of the field in which it was nested.

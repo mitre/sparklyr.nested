@@ -7,7 +7,7 @@
 sdf_explode(x, column, is_map = FALSE, keep_all = FALSE)
 }
 \arguments{
-\item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}
+\item{x}{An object (usually a \code{spark_tbl}) coercible to a Spark DataFrame.}
 
 \item{column}{The field to explode}
 

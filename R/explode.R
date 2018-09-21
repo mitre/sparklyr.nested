@@ -10,7 +10,7 @@
 #' exploding field is empty/null. Alternatively \code{keep_all=TRUE} will use the \code{explode_outer}
 #' scala method introduced in spark 2 to not drop any records.
 #' 
-#' @param x An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.
+#' @param x An object (usually a \code{spark_tbl}) coercible to a Spark DataFrame.
 #' @param column The field to explode
 #' @param is_map Logical. The (scala) \code{explode} method works for both \code{array} and \code{map}
 #'   column types. If the column to explode in an array, then \code{is_map=FALSE} will ensure that

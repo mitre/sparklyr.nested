@@ -17,10 +17,10 @@
 #' 
 #' Note that map types are supported, but there is no \code{is_map} argument. This is because the
 #' function is doing schema interrogation of the input data anyway to determine whether an explode
-#' operation is requried (it is of maps and arrays, but not for bare structs). Given this the result
+#' operation is required (it is of maps and arrays, but not for bare structs). Given this the result
 #' of the schema interrogation drives the value o \code{is_map} provided to \code{sdf_explode}.
 #' 
-#' @param x An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.
+#' @param x An object (usually a \code{spark_tbl}) coercible to a Spark DataFrame.
 #' @param column The field to explode
 #' @param keep_all Logical. If \code{FALSE} then records where the exploded value is empty/null
 #'   will be dropped.

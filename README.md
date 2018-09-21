@@ -167,5 +167,5 @@ There are a few things to notice about how `sdf_unnest` does things:
 
   - In the event of a name conflict (e.g., there is a top level
     `primary_key` and a `primary_key` nested inside the `phases` field)
-    then all of the nested fields will be disambuigated using the name
+    then all of the nested fields will be disambiguated using the name
     of the field in which it was nested.

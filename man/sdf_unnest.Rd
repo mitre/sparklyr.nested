@@ -7,7 +7,7 @@
 sdf_unnest(x, column, keep_all = FALSE)
 }
 \arguments{
-\item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}
+\item{x}{An object (usually a \code{spark_tbl}) coercible to a Spark DataFrame.}
 
 \item{column}{The field to explode}
 
@@ -33,7 +33,7 @@ are themselves nested structures that need to be dealt with accordingly.
 
 Note that map types are supported, but there is no \code{is_map} argument. This is because the
 function is doing schema interrogation of the input data anyway to determine whether an explode
-operation is requried (it is of maps and arrays, but not for bare structs). Given this the result
+operation is required (it is of maps and arrays, but not for bare structs). Given this the result
 of the schema interrogation drives the value o \code{is_map} provided to \code{sdf_explode}.
 }
 \examples{
