@@ -2,24 +2,29 @@
 % Please edit documentation in R/select.R
 \name{sdf_select}
 \alias{sdf_select}
-\alias{sdf_select_}
 \title{Select nested items}
 \usage{
-sdf_select(x, ..., aliases)
-
-sdf_select_(x, ..., .dots, aliases)
+sdf_select(x, ..., .aliases, .drop_parents = TRUE, .full_name = FALSE)
 }
 \arguments{
 \item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}
 
 \item{...}{Fields to select}
 
-\item{aliases}{Character. Optional. If provided these names will be matched positionally with
-select fields provided in \code{...}. This is more useful when calling from a function and
-less natural to use when calling the function directly. The alternative with direct calls
+\item{.aliases}{Character. Optional. If provided these names will be matched positionally with
+selected fields provided in \code{...}. This is more useful when calling from a function and
+less natural to use when calling the function directly. It is likely to get you into trouble
+if you are using \code{dplyr} select helpers. The alternative with direct calls
 is to put the alias on the left side of the expression (e.g. \code{sdf_select(df, fld_alias=parent.child.fld)})}
 
-\item{.dots}{List. Treated just like \code{...} except that the named arguments are in a list}
+\item{.drop_parents}{Logical. If \code{TRUE} then any field from which nested elements are extracted
+will be dropped, even if they were included in the selected \code{...}. This better supports using 
+\code{dplyr} field matching helpers like \code{everything()} and \code{starts_with}.}
+
+\item{.full_name}{Logical. If \code{TRUE} then nested field names that are not named (either using
+a LHS \code{name=field_name} construct or the \code{.aliases} argument) will be disambuigated using
+the parent field name. For example \code{sdf_select(df, x.y)} will return a field named \code{x_y}.
+If \code{FALSE} then the parent field name is dropped unless it is needed to avoid duplicate names.}
 }
 \description{
 The \code{select} function works well for keeping/dropping top level fields. It does not
@@ -27,4 +32,33 @@ however support access to nested data. This function will accept complex field n
 such as \code{x.y.z} where \code{z} is a field nested within \code{y} which is in turn
 nested within \code{x}. Since R uses "$" to access nested elements and java/scala use ".",
 \code{sdf_select(data, x.y.z)} and \code{sdf_select(data, x$y$z)} are equivalent.
+}
+\section{Selection Helpers}{
+
+
+\code{dplyr} allows the use of selection helpers (e.g., see \code{\link[dplyr]{everything}}).
+These helpers only work for top level fields however. For now all nested fields that should
+be promoted need to be explicitly identified.
+}
+
+\examples{
+\dontrun{
+# produces a dataframe with an array of characteristics nested under
+# each unique species identifier
+iris2 <- copy_to(sc, iris, name="iris")
+iris_nst <- iris2 \%>\%
+  sdf_nest(Sepal_Length, Sepal_Width, .key="Sepal") 
+
+# using java-like dot-notation
+iris_nst \%>\%
+  sdf_select(Species, Petal_Width, Sepal.Sepal_Width)
+
+# using R-like dollar-sign-notation
+iris_nst \%>\%
+  sdf_select(Species, Petal_Width, Sepal$Sepal_Width)
+  
+# using dplyr selection helpers
+iris_nst \%>\%
+  sdf_select(Species, matches("Petal"), Sepal$Sepal_Width)
+}
 }

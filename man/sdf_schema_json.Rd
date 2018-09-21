@@ -5,22 +5,25 @@
 \alias{sdf_schema_viewer}
 \title{Work with the schema}
 \usage{
-sdf_schema_json(x, simplify = FALSE, append_complex_type = TRUE)
+sdf_schema_json(x, parse_json = TRUE, simplify = FALSE,
+  append_complex_type = TRUE)
 
 sdf_schema_viewer(x, simplify = TRUE, append_complex_type = TRUE)
 }
 \arguments{
 \item{x}{An \code{R} object wrapping, or containing, a Spark DataFrame.}
 
+\item{parse_json}{Logical. If \code{TRUE} then the JSON return value will be parsed into an R list.}
+
 \item{simplify}{Logical. If \code{TRUE} then the schema will be folded into itself such that
 \code{{"name" : "field1", "type" : {"type" : "array", "elementType" : "string", "containsNull" : true},
  "nullable" : true, "metadata" : { } }} will be rendered simply \code{{"field1 (array)" : "[string]"}}}
 
-\item{append_complex_type}{Logical. This only matters if \code{simplify=TRUE}. In that case indicators will
-be included in the return value for array and struct types.}
+\item{append_complex_type}{Logical. This only matters if \code{parse_json=TRUE} and \code{simplify=TRUE}. 
+In that case indicators will be included in the return value for array and struct types.}
 }
 \description{
-Work with the schema
+These functions support flexible schema inspection both algorithmically and in human-friendly ways.
 }
 \examples{
 \dontrun{

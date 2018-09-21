@@ -2,17 +2,14 @@
 % Please edit documentation in R/explode.R
 \name{sdf_explode}
 \alias{sdf_explode}
-\alias{sdf_explode_}
 \title{Explode data along a column}
 \usage{
 sdf_explode(x, column, is_map = FALSE, keep_all = FALSE)
-
-sdf_explode_(x, column, is_map = FALSE, keep_all = FALSE)
 }
 \arguments{
 \item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}
 
-\item{column}{The column to explode}
+\item{column}{The field to explode}
 
 \item{is_map}{Logical. The (scala) \code{explode} method works for both \code{array} and \code{map}
 column types. If the column to explode in an array, then \code{is_map=FALSE} will ensure that
@@ -33,4 +30,17 @@ Two types of exploding are possible. The default method calls the scala \code{ex
 This operation is supported in both Spark version > 1.6. It will however drop records where the
 exploding field is empty/null. Alternatively \code{keep_all=TRUE} will use the \code{explode_outer}
 scala method introduced in spark 2 to not drop any records.
+}
+\examples{
+\dontrun{
+# first get some nested data
+iris2 <- copy_to(sc, iris, name="iris")
+iris_nst <- iris2 \%>\%
+  sdf_nest(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width, .key="data") \%>\%
+  group_by(Species) \%>\%
+  summarize(data=collect_list(data))
+
+# then explode it
+iris_nst \%>\% sdf_explode(data)
+}
 }

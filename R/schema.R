@@ -1,26 +1,31 @@
 #' Work with the schema
 #' 
-#' 
+#' These functions support flexible schema inspection both algorithmically and in human-friendly ways.
 #' 
 #' @param x An \code{R} object wrapping, or containing, a Spark DataFrame.
+#' @param parse_json Logical. If \code{TRUE} then the JSON return value will be parsed into an R list.
 #' @param simplify Logical. If \code{TRUE} then the schema will be folded into itself such that
 #'   \code{{"name" : "field1", "type" : {"type" : "array", "elementType" : "string", "containsNull" : true},
 #'    "nullable" : true, "metadata" : { } }} will be rendered simply \code{{"field1 (array)" : "[string]"}}
-#' @param append_complex_type Logical. This only matters if \code{simplify=TRUE}. In that case indicators will
-#'   be included in the return value for array and struct types.
+#' @param append_complex_type Logical. This only matters if \code{parse_json=TRUE} and \code{simplify=TRUE}. 
+#'   In that case indicators will be included in the return value for array and struct types.
 #' @export
 #' @importFrom jsonlite fromJSON
-#' @importFrom sparklyr invoke
-#' @importFrom sparklyr spark_dataframe
+#' @importFrom sparklyr invoke spark_dataframe
+#' @importFrom dplyr %>%
 #' @seealso \code{\link[sparklyr]{sdf_schema}}
-sdf_schema_json <- function(x, simplify=FALSE, append_complex_type=TRUE){
+sdf_schema_json <- function(x, parse_json=TRUE, simplify=FALSE, append_complex_type=TRUE){
   sdf <- spark_dataframe(x)
-  # schema <- sdf %>%
-  #   invoke("schema") %>% 
-  #   invoke("json") %>%
-  #   fromJSON(simplifyVector = FALSE)
-  schema <- fromJSON(invoke(invoke(sdf, "schema"), "json"), simplifyVector = FALSE)
+  schema <- sdf %>%
+    invoke("schema") %>%
+    invoke("json")
   
+  if (!parse_json)
+    return(schema)
+  
+  schema <- schema %>%
+    fromJSON(simplifyVector = FALSE)
+
   if (simplify)
     schema <- simplify_schema(schema, append_complex_type)
   

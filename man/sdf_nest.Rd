@@ -2,12 +2,9 @@
 % Please edit documentation in R/nest.R
 \name{sdf_nest}
 \alias{sdf_nest}
-\alias{sdf_nest_}
 \title{Nest data in a Spark Dataframe}
 \usage{
 sdf_nest(x, ..., .key = "data")
-
-sdf_nest_(x, columns, .key = "data")
 }
 \arguments{
 \item{x}{A Spark dataframe.}
@@ -15,11 +12,12 @@ sdf_nest_(x, columns, .key = "data")
 \item{...}{Columns to nest.}
 
 \item{.key}{Character. A name for the new column containing nested fields}
-
-\item{columns}{Character vector. Columns to nest.}
 }
 \description{
-This function is designed to behave similarly to \code{tidyr::nest}.
+This function is like \code{tidyr::nest}. Calling this function will not
+aggregate over other columns. Rather the output has the same number of
+rows/records as the input. See examples of how to achieve row reduction
+by aggregating elements using \code{collect_list}, which is a Spark SQL function
 }
 \examples{
 \dontrun{
@@ -27,7 +25,7 @@ This function is designed to behave similarly to \code{tidyr::nest}.
 # each unique species identifier
 iris2 <- copy_to(sc, iris, name="iris")
 iris2 \%>\%
-  sdf_nest(Sepal_Length, Sepal_Width, Petal.Length, Petal.Width, .key="data") \%>\%
+  sdf_nest(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width, .key="data") \%>\%
   group_by(Species) \%>\%
   summarize(data=collect_list(data))
 }
