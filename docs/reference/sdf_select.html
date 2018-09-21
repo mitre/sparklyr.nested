@@ -18,13 +18,29 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="Select nested items — sdf_select" />
+
+<meta property="og:description" content="The select function works well for keeping/dropping top level fields. It does not
+however support access to nested data. This function will accept complex field names
+such as x.y.z where z is a field nested within y which is in turn
+nested within x. Since R uses &quot;$&quot; to access nested elements and java/scala use &quot;.&quot;,
+sdf_select(data, x.y.z) and sdf_select(data, x$y$z) are equivalent." />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +63,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">sparklyr.nested</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">sparklyr.nested</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.2</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -70,6 +90,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -77,12 +98,15 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Select nested items</h1>
+    
+    <div class="hidden name"><code>sdf_select.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>The <code>select</code> function works well for keeping/dropping top level fields. It does not
 however support access to nested data. This function will accept complex field names
@@ -90,12 +114,11 @@ such as <code>x.y.z</code> where <code>z</code> is a field nested within <code>y
 nested within <code>x</code>. Since R uses "$" to access nested elements and java/scala use ".",
 <code>sdf_select(data, x.y.z)</code> and <code>sdf_select(data, x$y$z)</code> are equivalent.</p>
     
+    </div>
 
-    <pre class="usage"><span class='fu'>sdf_select</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='no'>aliases</span>)
-
-<span class='fu'>sdf_select_</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='no'>.dots</span>, <span class='no'>aliases</span>)</pre>
+    <pre class="usage"><span class='fu'>sdf_select</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='no'>.aliases</span>, <span class='kw'>.drop_parents</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.full_name</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -107,25 +130,66 @@ nested within <code>x</code>. Since R uses "$" to access nested elements and jav
       <td><p>Fields to select</p></td>
     </tr>
     <tr>
-      <th>aliases</th>
+      <th>.aliases</th>
       <td><p>Character. Optional. If provided these names will be matched positionally with
-select fields provided in <code>...</code>. This is more useful when calling from a function and
-less natural to use when calling the function directly. The alternative with direct calls
+selected fields provided in <code>...</code>. This is more useful when calling from a function and
+less natural to use when calling the function directly. It is likely to get you into trouble
+if you are using <code>dplyr</code> select helpers. The alternative with direct calls
 is to put the alias on the left side of the expression (e.g. <code>sdf_select(df, fld_alias=parent.child.fld)</code>)</p></td>
     </tr>
     <tr>
-      <th>.dots</th>
-      <td><p>List. Treated just like <code>...</code> except that the named arguments are in a list</p></td>
+      <th>.drop_parents</th>
+      <td><p>Logical. If <code>TRUE</code> then any field from which nested elements are extracted
+will be dropped, even if they were included in the selected <code>...</code>. This better supports using 
+<code>dplyr</code> field matching helpers like <code>everything()</code> and <code>starts_with</code>.</p></td>
+    </tr>
+    <tr>
+      <th>.full_name</th>
+      <td><p>Logical. If <code>TRUE</code> then nested field names that are not named (either using
+a LHS <code>name=field_name</code> construct or the <code>.aliases</code> argument) will be disambuigated using
+the parent field name. For example <code>sdf_select(df, x.y)</code> will return a field named <code>x_y</code>.
+If <code>FALSE</code> then the parent field name is dropped unless it is needed to avoid duplicate names.</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="selection-helpers"><a class="anchor" href="#selection-helpers"></a>Selection Helpers</h2>
 
+    
+    <p><code>dplyr</code> allows the use of selection helpers (e.g., see <code><a href='http://dplyr.tidyverse.org/reference/reexports.html'>everything</a></code>).
+These helpers only work for top level fields however. For now all nested fields that should
+be promoted need to be explicitly identified.</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># produces a dataframe with an array of characteristics nested under</span>
+<span class='co'># each unique species identifier</span>
+<span class='no'>iris2</span> <span class='kw'>&lt;-</span> <span class='fu'>copy_to</span>(<span class='no'>sc</span>, <span class='no'>iris</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='st'>"iris"</span>)
+<span class='no'>iris_nst</span> <span class='kw'>&lt;-</span> <span class='no'>iris2</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='sdf_nest.html'>sdf_nest</a></span>(<span class='no'>Sepal_Length</span>, <span class='no'>Sepal_Width</span>, <span class='kw'>.key</span><span class='kw'>=</span><span class='st'>"Sepal"</span>)
+
+<span class='co'># using java-like dot-notation</span>
+<span class='no'>iris_nst</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>sdf_select</span>(<span class='no'>Species</span>, <span class='no'>Petal_Width</span>, <span class='no'>Sepal.Sepal_Width</span>)
+
+<span class='co'># using R-like dollar-sign-notation</span>
+<span class='no'>iris_nst</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>sdf_select</span>(<span class='no'>Species</span>, <span class='no'>Petal_Width</span>, <span class='no'>Sepal</span>$<span class='no'>Sepal_Width</span>)
+
+<span class='co'># using dplyr selection helpers</span>
+<span class='no'>iris_nst</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>sdf_select</span>(<span class='no'>Species</span>, <span class='fu'>matches</span>(<span class='st'>"Petal"</span>), <span class='no'>Sepal</span>$<span class='no'>Sepal_Width</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#selection-helpers">Selection Helpers</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
@@ -136,11 +200,14 @@ is to put the alias on the left side of the expression (e.g. <code>sdf_select(df
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

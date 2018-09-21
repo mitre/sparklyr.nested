@@ -18,13 +18,28 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="Explode data along a column — sdf_explode" />
+
+<meta property="og:description" content="Exploding an array column of length N will replicate the top level record N times.
+The ith replicated record will contain a struct (not an array) corresponding to the ith element
+of the exploded array. Exploding will not promote any fields or otherwise change the schema of
+the data." />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +62,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">sparklyr.nested</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">sparklyr.nested</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.2</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -70,6 +89,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -77,24 +97,26 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Explode data along a column</h1>
+    
+    <div class="hidden name"><code>sdf_explode.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Exploding an array column of length <code>N</code> will replicate the top level record <code>N</code> times.
 The ith replicated record will contain a struct (not an array) corresponding to the ith element
 of the exploded array. Exploding will not promote any fields or otherwise change the schema of
 the data.</p>
     
+    </div>
 
-    <pre class="usage"><span class='fu'>sdf_explode</span>(<span class='no'>x</span>, <span class='no'>column</span>, <span class='kw'>is_map</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
-<span class='fu'>sdf_explode_</span>(<span class='no'>x</span>, <span class='no'>column</span>, <span class='kw'>is_map</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>sdf_explode</span>(<span class='no'>x</span>, <span class='no'>column</span>, <span class='kw'>is_map</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -103,7 +125,7 @@ the data.</p>
     </tr>
     <tr>
       <th>column</th>
-      <td><p>The column to explode</p></td>
+      <td><p>The field to explode</p></td>
     </tr>
     <tr>
       <th>is_map</th>
@@ -127,6 +149,18 @@ exploding field is empty/null. Alternatively <code>keep_all=TRUE</code> will use
 scala method introduced in spark 2 to not drop any records.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># first get some nested data</span>
+<span class='no'>iris2</span> <span class='kw'>&lt;-</span> <span class='fu'>copy_to</span>(<span class='no'>sc</span>, <span class='no'>iris</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='st'>"iris"</span>)
+<span class='no'>iris_nst</span> <span class='kw'>&lt;-</span> <span class='no'>iris2</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='sdf_nest.html'>sdf_nest</a></span>(<span class='no'>Sepal_Length</span>, <span class='no'>Sepal_Width</span>, <span class='no'>Petal_Length</span>, <span class='no'>Petal_Width</span>, <span class='kw'>.key</span><span class='kw'>=</span><span class='st'>"data"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>group_by</span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>summarize</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='fu'>collect_list</span>(<span class='no'>data</span>))
+
+<span class='co'># then explode it</span>
+<span class='no'>iris_nst</span> <span class='kw'>%&gt;%</span> <span class='fu'>sdf_explode</span>(<span class='no'>data</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -134,7 +168,9 @@ scala method introduced in spark 2 to not drop any records.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
@@ -145,11 +181,14 @@ scala method introduced in spark 2 to not drop any records.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

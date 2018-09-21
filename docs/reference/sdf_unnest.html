@@ -18,13 +18,29 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="Unnest data along a column — sdf_unnest" />
+
+<meta property="og:description" content="Unnesting is an (optional) explode operation coupled with a nested select to promote the sub-fields of
+the exploded top level array/map/struct to the top level. Hence, given a, an array with fields
+a1, a2, a3, then codesdf_explode(df, a) will produce output with each record replicated
+for every element in the a array and with the fields a1, a2, a3 (but not a)
+at the top level. Similar to tidyr::unnest." />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +63,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">sparklyr.nested</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">sparklyr.nested</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.2</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -70,6 +90,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -77,25 +98,27 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Unnest data along a column</h1>
+    
+    <div class="hidden name"><code>sdf_unnest.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
-    <p>Unnesting is an explode operation coupled with a nested select to promote the sub-fields of
-the exploded top level array to the top level. Hence, given <code>a</code>, an array with fields
+    <p>Unnesting is an (optional) explode operation coupled with a nested select to promote the sub-fields of
+the exploded top level array/map/struct to the top level. Hence, given <code>a</code>, an array with fields
 <code>a1, a2, a3</code>, then codesdf_explode(df, a) will produce output with each record replicated
 for every element in the <code>a</code> array and with the fields <code>a1, a2, a3</code> (but not <code>a</code>)
-at the top level. Similar to <code>tidyr::explode</code>.</p>
+at the top level. Similar to <code><a href='http://www.rdocumentation.org/packages/tidyr/topics/unnest'>tidyr::unnest</a></code>.</p>
     
+    </div>
 
-    <pre class="usage"><span class='fu'>sdf_unnest</span>(<span class='no'>x</span>, <span class='no'>column</span>, <span class='no'>prepend</span>, <span class='kw'>prepend_all</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
-<span class='fu'>sdf_unnest_</span>(<span class='no'>x</span>, <span class='no'>column</span>, <span class='no'>prepend</span>, <span class='kw'>prepend_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>sdf_unnest</span>(<span class='no'>x</span>, <span class='no'>column</span>, <span class='kw'>keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -104,18 +127,12 @@ at the top level. Similar to <code>tidyr::explode</code>.</p>
     </tr>
     <tr>
       <th>column</th>
-      <td><p>The column to unnest</p></td>
+      <td><p>The field to explode</p></td>
     </tr>
     <tr>
-      <th>prepend</th>
-      <td><p>Character. In the event that a nested field to be promoted has the same name as an
-existing top level field then this string will be prepended to the field name. The default 
-behavior is to prepend using the name of the field that is being unnested with an underscore.</p></td>
-    </tr>
-    <tr>
-      <th>prepend_all</th>
-      <td><p>Logical. If <code>TRUE</code> then the <code>prepend</code> argument will be used for all
-promoted fields even if no name conflict exists.</p></td>
+      <th>keep_all</th>
+      <td><p>Logical. If <code>FALSE</code> then records where the exploded value is empty/null
+will be dropped.</p></td>
     </tr>
     </table>
     
@@ -128,8 +145,24 @@ are wanted to the top level of the data frame.</p>
 <p>Additionally, though <code><a href='sdf_select.html'>sdf_select</a></code> allows users to reach arbitrarily far into a nested
 structure, this function will only reach one layer deep. It may well be that the unnested fields
 are themselves nested structures that need to be dealt with accordingly.</p>
+<p>Note that map types are supported, but there is no <code>is_map</code> argument. This is because the
+function is doing schema interrogation of the input data anyway to determine whether an explode
+operation is requried (it is of maps and arrays, but not for bare structs). Given this the result
+of the schema interrogation drives the value o <code>is_map</code> provided to <code>sdf_explode</code>.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># first get some nested data</span>
+<span class='no'>iris2</span> <span class='kw'>&lt;-</span> <span class='fu'>copy_to</span>(<span class='no'>sc</span>, <span class='no'>iris</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='st'>"iris"</span>)
+<span class='no'>iris_nst</span> <span class='kw'>&lt;-</span> <span class='no'>iris2</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='sdf_nest.html'>sdf_nest</a></span>(<span class='no'>Sepal_Length</span>, <span class='no'>Sepal_Width</span>, <span class='no'>Petal_Length</span>, <span class='no'>Petal_Width</span>, <span class='kw'>.key</span><span class='kw'>=</span><span class='st'>"data"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>group_by</span>(<span class='no'>Species</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>summarize</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='fu'>collect_list</span>(<span class='no'>data</span>))
+
+<span class='co'># then explode it</span>
+<span class='no'>iris_nst</span> <span class='kw'>%&gt;%</span> <span class='fu'>sdf_unnest</span>(<span class='no'>data</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -137,7 +170,9 @@ are themselves nested structures that need to be dealt with accordingly.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
@@ -148,11 +183,14 @@ are themselves nested structures that need to be dealt with accordingly.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+
