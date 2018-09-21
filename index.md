@@ -1,25 +1,25 @@
 ---
-output: github_document
+output:
+  html_document:
+    keep_md: true
+always_allow_html: yes
 ---
 
 [![Build Status](https://travis-ci.org/mitre/sparklyr.nested.svg?branch=master)](https://travis-ci.org/mitre/sparklyr.nested)
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 A package to extend the capabilities available in the `sparklyr` package with support for working with nested data.
 
 ## Installation & Documentation
 
 To install:
-```{r, eval=FALSE}
+
+```r
 devtools::install_github("mitre/sparklyr.nested")
 ```
 
 Note that per the `sparklyr` installation instructions, you will need to install Spark if you have not already done so or are not using a cluster where it is already installed.
-
-Full documentation is available here: https://mitre.github.io/sparklyr.nested/
 
 ## Nested Operations
 
@@ -37,18 +37,39 @@ This is a data set that is not very natural for more R use cases (though the `ti
 The schema viewer (coupled with a json schema getter `sdf_schema_json`) makes understanding the structure of the data simple.
 
 Suppose that `spark_data` is a Spark data frame.
-The structure may be understood by explanding/collapsing the schema via
-```{r, eval=FALSE}
-spark_data %>%
-  sdf_schema_viewer()
+The following is mostly a bunch of code to simulate a `sparklyr` environment where no actual spark connection exists, but the key bit at the end shows how the `listviewer` package with some schema parsing yields an effective view of how the data is structured.
+
+
+
+```r
+library(testthat)
+library(jsonlite)
+library(sparklyr)
+library(sparklyr.nested)
+
+with_mock(
+  # I am mocking functions so that the example works without a real spark connection
+  spark_read_parquet = function(x, ...){return("this is a spark dataframe")},
+  sdf_schema_json = function(x, ...){return(fromJSON(sample_json))},
+  spark_connect = function(...){return("this is a spark connection")},
+
+  
+  # -- interesting part starts here -------------------
+  
+  sc <- spark_connect(),  
+  spark_data <- spark_read_parquet(sc, path="path/to/data/*.parquet", name="some_name"),
+  sdf_schema_viewer(spark_data)
+)
 ```
 
-![schema viewer](./README-images/schema_viewer.png)
+<!--html_preserve--><div id="htmlwidget-a7df7926d87f24946a5d" style="width:672px;height:480px;" class="jsonedit html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a7df7926d87f24946a5d">{"x":{"data":{"aircraft_id":"string","phase_sequence":"string","phases (array)":{"start_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"end_point (struct)":{"segment_phase":"string","agl":"double","elevation":"double","time":"long","latitude":"double","longitude":"double","altitude":"double","course":"double","speed":"double","source_point_keys (array)":"[string]","primary_key":"string"},"phase":"string","primary_key":"string"},"primary_key":"string"},"options":{"mode":"tree","modes":["code","form","text","tree","view"]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 It is also handy to use the schema viewer to quickly inspect what a pipeline of operations is going to return.
 This enables you to anticipate the structure of the output you are going to get (and make sure the operations are valid with respect to schema modification) without doing any actual computation on your data.
 For example:
-```{r, eval=FALSE}
+
+```r
 spark_data %>%
   sdf_unnest(phases) %>%
   select(aircraft_id, start_point) %>%
@@ -60,7 +81,8 @@ spark_data %>%
 The `sdf_select` function makes it possible to select nested elements.
 For example, given the schema displayed above, we may be interested in only the phase start point; and within that, only the time and altitude fields.
 Grabbing these elements is not possible with a simple `select`, but can be done via:
-```{r, eval=FALSE}
+
+```r
 spark_data %>%
   sdf_select(aircraft_id, time=phases.start_point.time, altitude=phases.start_point.altitude)
 ```
@@ -68,14 +90,16 @@ spark_data %>%
 In java dots are not valid characters in a field name so the dot-operator is handled.
 However, since the dollar sign is typically used for this purpose in R, that is supported as well.
 The following will trigger the same operation as the above:
-```{r, eval=FALSE}
+
+```r
 spark_data %>%
   sdf_select(aircraft_id, time=phases$start_point$time, altitude=phases$start_point$altitude)
 ```
 
 What if you want to keep all top level fields, except phases, from which you still want to start point time and altitude?
 This can be accomplished via:
-```{r, eval=FALSE}
+
+```r
 spark_data %>%
   sdf_select(aircraft_id, phase_sequence, primary_key, 
              time=phases$start_point$time, altitude=phases$start_point$altitude)
@@ -85,7 +109,8 @@ In this particular example things are not so bad.
 But imagine a case where you have a wide data set.
 Listing out each top level field would quickly become cumbersome.
 To ease this pain, the `dplyr` selection helpers are supported, so the above operation may be accomplished using:
-```{r, eval=FALSE}
+
+```r
 spark_data %>%
   sdf_select(everything(), time=phases$start_point$time, altitude=phases$start_point$altitude)
 ```
@@ -100,7 +125,8 @@ It will *not* change the schema beyond transforming arrays to structures.
 
 The above example could be repeated like so to get something more typical for R where there is a single value per field per "row" (record).
 In this case the `aircraft_id` values would be replicated N times instead of having vectors in the `time`/`altitude` fields.
-```{r, eval=FALSE}
+
+```r
 spark_data %>%
   sdf_explode(phases) %>%
   sdf_select(aircraft_id, time=phases$start_point$time, altitude=phases$start_point$altitude)
@@ -113,13 +139,15 @@ It is necessary here because `tidyr` functions cannot be called directly on spar
 An unnest operation is a combination of an explode with a corresponding nested select to promote the (exploded) nested fields up one level of the data schema.
 
 Thus the following operations are equivalent:
-```{r, eval=FALSE}
+
+```r
 spark_data %>%
   sdf_unnest(phases)
 ```
 
 and
-```{r, eval=FALSE}
+
+```r
 spark_data %>%
   sdf_explode(phases) %>%
   sdf_select(aircraft_id, terrain_fusion_key, vertical_taxonomy_key, sequence, 

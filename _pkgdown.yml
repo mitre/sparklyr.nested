@@ -10,8 +10,13 @@ home:
 navbar:
   type: inverse
   left:
+    - text: "Home"
+      href: index.html
     - text: "Reference"
       href: reference/index.html
+    - text: "Change Log"
+      href: news/index.html
+    
   right:
     - icon: fa-question-circle fa-lg
       href: https://github.com/mitre/sparklyr.nested/issues
