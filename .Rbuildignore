@@ -4,5 +4,3 @@
 ^\.travis\.yml$
 ^docs$
 ^README
-^index
-^cran-comments\.md$

@@ -8,3 +8,6 @@
 
 ## Downstream dependencies
 None, first time submission
+
+## Additional notes
+* All examples are wrapped in \dontrun{} due to their dependence on an Apache Spark installation. These functions call java methods implemented in Spark via the sparklyr `invoke` methods. To run tests on CRAN machines would require installing a version of spark and spooling up a spark session - which is far out of bounds for the 5s runtime I was advised to respect.

@@ -1,13 +1,12 @@
 Package: sparklyr.nested
-Title: A Sparklyr Extension for Nested Data
+Title: A 'sparklyr' Extension for Nested Data
 Version: 0.0.3
 Authors@R: c(
     person("Matt", "Pollock", email = "mpollock@mitre.org", role = c("aut", "cre")),
     person(family = "The MITRE Corporation", role = c("cph"))
     )
 Maintainer: Matt Pollock <mpollock@mitre.org>
-Description: A sparklyr extension adding the capability to work easily with nested data using
-             dot and dollar sign notation.
+Description: A 'sparklyr' extension adding the capability to work easily with nested data.
 Depends: R (>= 3.3)
 Imports: sparklyr, jsonlite, listviewer, dplyr, rlang, purrr
 License: Apache License 2.0 | file LICENSE
