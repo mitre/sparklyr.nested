@@ -129,7 +129,7 @@ nested within <code>x</code>. Since R uses "$" to access nested elements and jav
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An object (usually a <code>spark_tbl</code>) coercable to a Spark DataFrame.</p></td>
+      <td><p>An object (usually a <code>spark_tbl</code>) coercible to a Spark DataFrame.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -152,7 +152,7 @@ will be dropped, even if they were included in the selected <code>...</code>. Th
     <tr>
       <th>.full_name</th>
       <td><p>Logical. If <code>TRUE</code> then nested field names that are not named (either using
-a LHS <code>name=field_name</code> construct or the <code>.aliases</code> argument) will be disambuigated using
+a LHS <code>name=field_name</code> construct or the <code>.aliases</code> argument) will be disambiguated using
 the parent field name. For example <code>sdf_select(df, x.y)</code> will return a field named <code>x_y</code>.
 If <code>FALSE</code> then the parent field name is dropped unless it is needed to avoid duplicate names.</p></td>
     </tr>

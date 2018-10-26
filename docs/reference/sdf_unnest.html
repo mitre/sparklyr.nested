@@ -129,7 +129,7 @@ at the top level. Similar to <code><a href='http://www.rdocumentation.org/packag
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An object (usually a <code>spark_tbl</code>) coercable to a Spark DataFrame.</p></td>
+      <td><p>An object (usually a <code>spark_tbl</code>) coercible to a Spark DataFrame.</p></td>
     </tr>
     <tr>
       <th>column</th>
@@ -153,7 +153,7 @@ structure, this function will only reach one layer deep. It may well be that the
 are themselves nested structures that need to be dealt with accordingly.</p>
 <p>Note that map types are supported, but there is no <code>is_map</code> argument. This is because the
 function is doing schema interrogation of the input data anyway to determine whether an explode
-operation is requried (it is of maps and arrays, but not for bare structs). Given this the result
+operation is required (it is of maps and arrays, but not for bare structs). Given this the result
 of the schema interrogation drives the value o <code>is_map</code> provided to <code>sdf_explode</code>.</p>
     
 
