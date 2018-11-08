@@ -9,8 +9,8 @@
 #' \dontrun{
 #' # produces a dataframe with an array of characteristics nested under
 #' # each unique species identifier
-#' iris2 <- copy_to(sc, iris, name="iris")
-#' iris2 %>%
+#' iris_tbl <- copy_to(sc, iris, name="iris")
+#' iris_tbl %>%
 #'   sdf_nest(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width, .key="data") %>%
 #'   group_by(Species) %>%
 #'   summarize(data=collect_list(data))
