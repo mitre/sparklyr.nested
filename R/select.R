@@ -35,8 +35,8 @@
 #' \dontrun{
 #' # produces a dataframe with an array of characteristics nested under
 #' # each unique species identifier
-#' iris2 <- copy_to(sc, iris, name="iris")
-#' iris_nst <- iris2 %>%
+#' iris_tbl <- copy_to(sc, iris, name="iris")
+#' iris_nst <- iris_tbl %>%
 #'   sdf_nest(Sepal_Length, Sepal_Width, .key="Sepal") 
 #' 
 #' # using java-like dot-notation

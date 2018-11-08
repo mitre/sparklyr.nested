@@ -32,8 +32,8 @@
 #' @examples 
 #' \dontrun{
 #' # first get some nested data
-#' iris2 <- copy_to(sc, iris, name="iris")
-#' iris_nst <- iris2 %>%
+#' iris_tbl <- copy_to(sc, iris, name="iris")
+#' iris_nst <- iris_tbl %>%
 #'   sdf_nest(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width, .key="data") %>%
 #'   group_by(Species) %>%
 #'   summarize(data=collect_list(data))
