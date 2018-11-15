@@ -2,7 +2,8 @@
 output: github_document
 ---
 
-[![Build Status](https://travis-ci.org/mitre/sparklyr.nested.svg?branch=master)](https://travis-ci.org/mitre/sparklyr.nested)
+[![Build Status](https://travis-ci.org/mitre/sparklyr.nested.svg?branch=master)](https://travis-ci.org/mitre/sparklyr.nested) [![CRAN Status Badge](http://www.r-pkg.org/badges/version/sparklyr.nested)](https://cran.r-project.org/package=sparklyr.nested) ![downloads](http://cranlogs.r-pkg.org/badges/grand-total/sparklyr.nested)
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)

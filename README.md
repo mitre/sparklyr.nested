@@ -1,6 +1,9 @@
 
 [![Build
 Status](https://travis-ci.org/mitre/sparklyr.nested.svg?branch=master)](https://travis-ci.org/mitre/sparklyr.nested)
+[![CRAN Status
+Badge](http://www.r-pkg.org/badges/version/sparklyr.nested)](https://cran.r-project.org/package=sparklyr.nested)
+![downloads](http://cranlogs.r-pkg.org/badges/grand-total/sparklyr.nested)
 
 A package to extend the capabilities available in the `sparklyr` package
 with support for working with nested data.
