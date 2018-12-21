@@ -91,7 +91,7 @@ sdf_select <- function(x, ..., .aliases, .drop_parents=TRUE, .full_name=FALSE) {
     } else {
       nested_names <- nested_vars %>%
         strsplit(split=".", fixed=TRUE) %>%
-        map(function(y){return(y[[2]])}) %>%
+        map(function(y){return(y[[length(y)]])}) %>%
         flatten_chr()
       if (any(nested_names %in% .aliases)) {
         .aliases <- gsub(".", "_", .aliases, fixed=TRUE)
