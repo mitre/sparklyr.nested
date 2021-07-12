@@ -34,7 +34,7 @@ sdf_schema_json <- function(x, parse_json=TRUE, simplify=FALSE, append_complex_t
 
 #' @rdname sdf_schema_json
 #' @export
-#' @importFrom listviewer jsonedit
+#' @importFrom listviewer jsonedit reactjson
 #' @examples
 #' \dontrun{
 #' library(testthat)
@@ -64,9 +64,13 @@ sdf_schema_json <- function(x, parse_json=TRUE, simplify=FALSE, append_complex_t
 #'   sdf_schema_viewer(spark_data)
 #' )
 #' }
-sdf_schema_viewer <- function(x, simplify=TRUE,  append_complex_type=TRUE) {
+sdf_schema_viewer <- function(x, simplify=TRUE,  append_complex_type=TRUE, use_react = FALSE) {
   schema <- sdf_schema_json(x, simplify=simplify, append_complex_type=append_complex_type)
-  jsonedit(schema) 
+  if (use_react) {
+    reactjson(schema, collapsed = 1, displayDataTypes = FALSE, onEdit = FALSE, onAdd = FALSE, onDelete = FALSE)
+  } else {
+    jsonedit(schema) 
+  }
 }
 
 #' @keywords internal
