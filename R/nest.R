@@ -19,11 +19,11 @@
 #' @param x A Spark dataframe.
 #' @param ... Columns to nest.
 #' @param .key Character. A name for the new column containing nested fields
-#' @importFrom dplyr select_vars
+#' @importFrom tidyselect vars_select
 #' @export
 sdf_nest <- function(x, ..., .key="data") {
   
-  vars_to_nest <- select_vars(colnames(x), ...)
+  vars_to_nest <- vars_select(colnames(x), ...)
   
   sdf <- spark_dataframe(x)
   sc <- spark_connection(x)
