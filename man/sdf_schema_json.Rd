@@ -12,7 +12,12 @@ sdf_schema_json(
   append_complex_type = TRUE
 )
 
-sdf_schema_viewer(x, simplify = TRUE, append_complex_type = TRUE)
+sdf_schema_viewer(
+  x,
+  simplify = TRUE,
+  append_complex_type = TRUE,
+  use_react = FALSE
+)
 }
 \arguments{
 \item{x}{An \code{R} object wrapping, or containing, a Spark DataFrame.}
