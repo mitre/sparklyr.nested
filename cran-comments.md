@@ -5,6 +5,8 @@
 * Windows Server 2022, R-devel, 64 bit (using `devtools::check_rhub`)
 * Ubuntu Linux 20.04.1 LTS, R-release, GCC (using `devtools::check_rhub`)
 * Fedora Linux, R-devel, clang, gfortran (using `devtools::check_rhub`)
+* Windows R release, R 4.2.2 (using https://win-builder.r-project.org)
+* Windows R deval, R 4.3.0 (using https://win-builder.r-project.org)
 
 ## R CMD check results
 
