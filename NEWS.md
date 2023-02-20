@@ -1,3 +1,8 @@
+# sparklyr.nested 0.0.4
+
+- Replaced now-defunct `dplyr::select_vars` calls with `tidyselect::vars_select`
+- Support (optinally) using `listviewer::reactjson` to view schemas
+
 # sparklyr.nested 0.0.3
 
 - Initial release

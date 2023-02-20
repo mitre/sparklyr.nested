@@ -5,3 +5,4 @@
 ^docs$
 ^README
 ^cran-comments\.md
+^revdep$
