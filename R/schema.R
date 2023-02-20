@@ -34,6 +34,10 @@ sdf_schema_json <- function(x, parse_json=TRUE, simplify=FALSE, append_complex_t
 
 #' @rdname sdf_schema_json
 #' @export
+#' @param use_react Logical. If \code{TRUE} schemas will be rendered using \link[listviewer]{reactjson}.
+#'   Otherwise they will be rendered using \link[listviewer]{jsonedit} (the default). Using react works better
+#'   in some contexts (e.g. bookdown-rendered HTML) and has a different look & feel. It does however carry
+#'   an extra dependency on the \code{reactR} package suggested by \code{listviewer}.
 #' @importFrom listviewer jsonedit reactjson
 #' @examples
 #' \dontrun{

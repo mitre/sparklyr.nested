@@ -30,6 +30,11 @@ sdf_schema_viewer(
 
 \item{append_complex_type}{Logical. This only matters if \code{parse_json=TRUE} and \code{simplify=TRUE}. 
 In that case indicators will be included in the return value for array and struct types.}
+
+\item{use_react}{Logical. If \code{TRUE} schemas will be rendered using \link[listviewer]{reactjson}.
+Otherwise they will be rendered using \link[listviewer]{jsonedit} (the default). Using react works better
+in some contexts (e.g. bookdown-rendered HTML) and has a different look & feel. It does however carry
+an extra dependency on the \code{reactR} package suggested by \code{listviewer}.}
 }
 \description{
 These functions support flexible schema inspection both algorithmically and in human-friendly ways.
