@@ -15,6 +15,11 @@ A package to extend the capabilities available in the `sparklyr` package with su
 
 To install:
 ```{r, eval=FALSE}
+install.packages("sparklyr.nested")
+```
+
+Or to get the development version:
+```{r, eval=FALSE}
 devtools::install_github("mitre/sparklyr.nested")
 ```
 
