@@ -43,7 +43,7 @@ This is a data set that is not very natural for more R use cases (though the `ti
 The schema viewer (coupled with a json schema getter `sdf_schema_json`) makes understanding the structure of the data simple.
 
 Suppose that `spark_data` is a Spark data frame.
-The structure may be understood by explanding/collapsing the schema via
+The structure may be understood by expanding/collapsing the schema via
 ```{r, eval=FALSE}
 spark_data %>%
   sdf_schema_viewer()

@@ -21,7 +21,7 @@ will be dropped.}
 }
 \description{
 Exploding an array column of length \code{N} will replicate the top level record \code{N} times.
-The ith replicated record will contain a struct (not an array) corresponding to the ith element
+The i^th replicated record will contain a struct (not an array) corresponding to the i^th element
 of the exploded array. Exploding will not promote any fields or otherwise change the schema of
 the data.
 }

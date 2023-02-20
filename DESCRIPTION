@@ -9,11 +9,10 @@ Maintainer: Matt Pollock <mpollock@mitre.org>
 Description: A 'sparklyr' extension adding the capability to work easily with nested data.
 Depends: R (>= 3.3)
 Imports: sparklyr, jsonlite, listviewer, dplyr, rlang, purrr, tidyselect
-Suggestes: reactR
+Suggests: testthat, reactR
 License: Apache License 2.0 | file LICENSE
 SystemRequirements: Spark: 1.6.x or 2.x
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
-Suggests: testthat
 BugReports: https://github.com/mitre/sparklyr.nested/issues

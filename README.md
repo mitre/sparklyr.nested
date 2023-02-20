@@ -51,7 +51,7 @@ with a json schema getter `sdf_schema_json`) makes understanding the
 structure of the data simple.
 
 Suppose that `spark_data` is a Spark data frame. The structure may be
-understood by explanding/collapsing the schema via
+understood by expanding/collapsing the schema via
 
 ``` r
 spark_data %>%

@@ -2,6 +2,9 @@
 
 * local OS X install, R 4.1.1
 * Ubuntu 22.04.1 LTS (using the `rocker/binder:4.2.2` docker image), R 4.2.2
+* Windows Server 2022, R-devel, 64 bit (using `devtools::check_rhub`)
+* Ubuntu Linux 20.04.1 LTS, R-release, GCC (using `devtools::check_rhub`)
+* Fedora Linux, R-devel, clang, gfortran (using `devtools::check_rhub`)
 
 ## R CMD check results
 
