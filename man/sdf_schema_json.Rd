@@ -28,7 +28,7 @@ sdf_schema_viewer(
 \code{{"name" : "field1", "type" : {"type" : "array", "elementType" : "string", "containsNull" : true},
  "nullable" : true, "metadata" : { } }} will be rendered simply \code{{"field1 (array)" : "[string]"}}}
 
-\item{append_complex_type}{Logical. This only matters if \code{parse_json=TRUE} and \code{simplify=TRUE}. 
+\item{append_complex_type}{Logical. This only matters if \code{parse_json=TRUE} and \code{simplify=TRUE}.
 In that case indicators will be included in the return value for array and struct types.}
 
 \item{use_react}{Logical. If \code{TRUE} schemas will be rendered using \link[listviewer]{reactjson}.
@@ -61,7 +61,7 @@ with_mock(
   spark_read_parquet = function(x, ...){return("this is a spark dataframe")},
   sdf_schema_json = function(x, ...){return(fromJSON(sample_json))},
   spark_connect = function(...){return("this is a spark connection")},
-  
+
   # the meat of the example is here
   sc <- spark_connect(),
   spark_data <- spark_read_parquet(sc, path="path/to/data/*.parquet", name="some_name"),

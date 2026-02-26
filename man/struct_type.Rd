@@ -68,6 +68,6 @@ timestamp_type(sc)
 }
 \description{
 These function support supplying a spark read schema. This is particularly useful
-when reading data with nested arrays when you are not interested in several of 
+when reading data with nested arrays when you are not interested in several of
 the nested fields.
 }
