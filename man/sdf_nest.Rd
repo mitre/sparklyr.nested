@@ -24,9 +24,9 @@ by aggregating elements using \code{collect_list}, which is a Spark SQL function
 # produces a dataframe with an array of characteristics nested under
 # each unique species identifier
 iris_tbl <- copy_to(sc, iris, name="iris")
-iris_tbl \%>\%
-  sdf_nest(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width, .key="data") \%>\%
-  group_by(Species) \%>\%
+iris_tbl |>
+  sdf_nest(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width, .key="data") |>
+  group_by(Species) |>
   summarize(data=collect_list(data))
 }
 

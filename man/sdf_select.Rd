@@ -18,7 +18,7 @@ if you are using \code{dplyr} select helpers. The alternative with direct calls
 is to put the alias on the left side of the expression (e.g. \code{sdf_select(df, fld_alias=parent.child.fld)})}
 
 \item{.drop_parents}{Logical. If \code{TRUE} then any field from which nested elements are extracted
-will be dropped, even if they were included in the selected \code{...}. This better supports using 
+will be dropped, even if they were included in the selected \code{...}. This better supports using
 \code{dplyr} field matching helpers like \code{everything()} and \code{starts_with}.}
 
 \item{.full_name}{Logical. If \code{TRUE} then nested field names that are not named (either using
@@ -46,19 +46,19 @@ be promoted need to be explicitly identified.
 # produces a dataframe with an array of characteristics nested under
 # each unique species identifier
 iris_tbl <- copy_to(sc, iris, name="iris")
-iris_nst <- iris_tbl \%>\%
-  sdf_nest(Sepal_Length, Sepal_Width, .key="Sepal") 
+iris_nst <- iris_tbl |>
+  sdf_nest(Sepal_Length, Sepal_Width, .key="Sepal")
 
 # using java-like dot-notation
-iris_nst \%>\%
+iris_nst |>
   sdf_select(Species, Petal_Width, Sepal.Sepal_Width)
 
 # using R-like dollar-sign-notation
-iris_nst \%>\%
+iris_nst |>
   sdf_select(Species, Petal_Width, Sepal$Sepal_Width)
-  
+
 # using dplyr selection helpers
-iris_nst \%>\%
+iris_nst |>
   sdf_select(Species, matches("Petal"), Sepal$Sepal_Width)
 }
 }

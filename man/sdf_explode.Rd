@@ -35,12 +35,12 @@ scala method introduced in spark 2 to not drop any records.
 \dontrun{
 # first get some nested data
 iris_tbl <- copy_to(sc, iris, name="iris")
-iris_nst <- iris_tbl \%>\%
-  sdf_nest(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width, .key="data") \%>\%
-  group_by(Species) \%>\%
+iris_nst <- iris_tbl |>
+  sdf_nest(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width, .key="data") |>
+  group_by(Species) |>
   summarize(data=collect_list(data))
 
 # then explode it
-iris_nst \%>\% sdf_explode(data)
+iris_nst |> sdf_explode(data)
 }
 }
