@@ -2,9 +2,21 @@
 % Please edit documentation in R/avro.R
 \name{avro_subschema}
 \alias{avro_subschema}
+\alias{avro_subschema_jobj}
 \title{Subset an Avro schema to a set of fields}
 \usage{
 avro_subschema(
+  schema,
+  fields,
+  keep_docs = FALSE,
+  keep_namespace = FALSE,
+  keep_java_class = keep_namespace,
+  keep_default = FALSE,
+  ...
+)
+
+avro_subschema_jobj(
+  sc,
   schema,
   fields,
   keep_docs = FALSE,
@@ -38,12 +50,16 @@ Defaults to \code{keep_namespace}.}
 \item{keep_default}{Logical. If \code{FALSE} (default), remove \code{default} entries from fields.}
 
 \item{...}{Arguments passed to \code{\link[jsonlite]{toJSON}}}
+
+\item{sc}{A \code{spark_connection}.}
 }
 \value{
-A JSON string (subsetted schema).
+\code{avro_subschema}: A JSON string (subsetted schema).
+
+\code{avro_subschema_jobj}: A Spark \code{StructType} Java object (\code{spark_jobj}).
 }
 \description{
-Returns a simplified Avro JSON schema containing only the specified fields.
+Returns a simplified Avro schema containing only the specified fields.
 Nested fields (e.g. \code{points.latitude} in a \code{points} array of records)
 are supported. The field specification is the same for a field in a nested array
 of records or for a field in a nested record. The function will detect the type
@@ -54,11 +70,34 @@ The purpose of a sub-schema is use with \code{\link[sparklyr]{spark_read_avro}} 
 \code{\link[sparklyr]{spark_read_parquet}} to read data more efficiently into Spark
 DataFrames.
 }
+\section{Return types}{
+
+Both functions accept the same schema and field arguments, but differ in their
+return value:
+\describe{
+  \item{\code{avro_subschema}}{Returns a JSON string representing the subsetted
+    Avro schema. Useful when you need the schema as text (e.g. for storage,
+    logging, or passing to another system).}
+  \item{\code{avro_subschema_jobj}}{Returns a Spark \code{StructType} Java
+    object (\code{spark_jobj}), ready to pass directly to
+    \code{\link[sparklyr]{spark_read_parquet}} or
+    \code{\link[sparklyr]{spark_read_avro}} as the \code{schema} argument.
+    Requires an active \code{spark_connection}.}
+}
+}
+
 \examples{
 \dontrun{
 schema <- '{"type":"record","name":"X","fields":[{"name":"a","type":"string"},{"name":"b","type":"int"}]}'
+
+# JSON string output
 avro_subschema(schema, "a")
 avro_subschema(schema, list("a", "b"))
+
+# Spark StructType output (requires a spark connection)
+sc <- sparklyr::spark_connect(master = "local")
+jobj <- avro_subschema_jobj(sc, schema, "a")
+df <- sparklyr::spark_read_parquet(sc, path = "data.parquet", schema = jobj)
 }
 
 }
