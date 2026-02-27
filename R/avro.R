@@ -461,3 +461,166 @@ strip_field_meta <- function(x, opts) {
   }
   x
 }
+
+#' Convert an Avro schema to a Spark StructType Java object
+#'
+#' Parses an Avro JSON schema (character or list) and builds the corresponding
+#' Spark \code{StructType} via \code{sparklyr.nested} type constructors. This is
+#' useful for supplying a \code{schema} argument to
+#' \code{\link[sparklyr]{spark_read_parquet}} or
+#' \code{\link[sparklyr]{spark_read_avro}}.
+#'
+#' @param sc A \code{spark_connection}.
+#' @param schema Character or list. An Avro schema (JSON string or parsed list).
+#'
+#' @return A Spark \code{StructType} Java object (\code{spark_jobj}).
+#'
+#' @examples
+#' \dontrun{
+#' sc <- sparklyr::spark_connect(master = "local")
+#' schema <- '{"type":"record","name":"X","fields":[{"name":"a","type":"string"}]}'
+#' jobj <- schema_to_jobj(sc, schema)
+#' df <- sparklyr::spark_read_parquet(sc, path = "data.parquet", schema = jobj)
+#' }
+#'
+#' @export
+schema_to_jobj <- function(sc, schema) {
+  if (is.character(schema)) {
+    schema <- jsonlite::fromJSON(schema, simplifyVector = FALSE)
+  }
+  if (!is.list(schema)) {
+    rlang::abort("`schema` must be a character (JSON) or list.")
+  }
+  avro_to_spark_type(sc, schema)
+}
+
+#' Subset an Avro schema and convert to a Spark StructType Java object
+#'
+#' Convenience wrapper that first subsets the schema via
+#' \code{\link{avro_subschema}} and then converts the result to a Spark
+#' \code{StructType} via \code{\link{schema_to_jobj}}.
+#'
+#' @inheritParams avro_subschema
+#' @param sc A \code{spark_connection}.
+#'
+#' @return A Spark \code{StructType} Java object (\code{spark_jobj}).
+#'
+#' @examples
+#' \dontrun{
+#' sc <- sparklyr::spark_connect(master = "local")
+#' schema <- '{"type":"record","name":"X","fields":[{"name":"a","type":"string"},{"name":"b","type":"int"}]}'
+#' jobj <- avro_subschema_jobj(sc, schema, "a")
+#' df <- sparklyr::spark_read_parquet(sc, path = "data.parquet", schema = jobj)
+#' }
+#'
+#' @export
+avro_subschema_jobj <- function(
+  sc,
+  schema,
+  fields,
+  keep_docs = FALSE,
+  keep_namespace = FALSE,
+  keep_java_class = keep_namespace,
+  keep_default = FALSE,
+  ...
+) {
+  sub_json <- avro_subschema(
+    schema, fields,
+    keep_docs = keep_docs,
+    keep_namespace = keep_namespace,
+    keep_java_class = keep_java_class,
+    keep_default = keep_default,
+    ...
+  )
+  schema_to_jobj(sc, sub_json)
+}
+
+# --- Avro-to-Spark type conversion helpers ---
+
+# @keywords internal
+avro_to_spark_type <- function(sc, avro_type, nullable = FALSE) {
+  if (is.null(avro_type)) {
+    return(string_type(sc))
+  }
+  if (is.character(avro_type)) {
+    return(avro_primitive_to_spark(sc, avro_type))
+  }
+  # Unnamed list = union type (e.g. ["null", "string"])
+  if (is.list(avro_type) && length(avro_type) > 0 && is.null(names(avro_type))) {
+    if (length(avro_type) == 2 && "null" %in% avro_type) {
+      inner <- avro_type[[which(avro_type != "null")]]
+      return(avro_to_spark_type(sc, inner, nullable = TRUE))
+    }
+    return(avro_to_spark_type(sc, avro_type[[1]], nullable))
+  }
+  # Named list with a "type" key
+  if (is.list(avro_type) && !is.null(names(avro_type))) {
+    kind <- avro_type[["type"]]
+    if (!is.null(kind)) {
+      return(avro_typed_to_spark(sc, avro_type, kind))
+    }
+  }
+  string_type(sc)
+}
+
+# @keywords internal
+avro_typed_to_spark <- function(sc, avro_type, kind) {
+  switch(
+    kind,
+    record = {
+      struct_fields <- lapply(avro_type$fields, function(f) {
+        nullable_field <- is_nullable_avro(f$type)
+        field_type <- avro_to_spark_type(
+          sc,
+          avro_unwrap_null(f$type),
+          nullable = FALSE
+        )
+        struct_field(sc, name = f$name, data_type = field_type, nullable = nullable_field)
+      })
+      struct_type(sc, struct_fields = struct_fields)
+    },
+    array = {
+      items_type <- avro_to_spark_type(sc, avro_type$items, nullable = FALSE)
+      array_type(sc, items_type)
+    },
+    map = {
+      key_type <- string_type(sc)
+      values_avro <- avro_type[["values"]]
+      value_type <- avro_to_spark_type(
+        sc,
+        if (is.null(values_avro)) "string" else values_avro,
+        nullable = FALSE
+      )
+      map_type(sc, key_type, value_type)
+    },
+    avro_primitive_to_spark(sc, kind)
+  )
+}
+
+# @keywords internal
+avro_unwrap_null <- function(avro_type) {
+  if (is.list(avro_type) && length(avro_type) == 2 && "null" %in% avro_type) {
+    return(avro_type[[which(avro_type != "null")]])
+  }
+  avro_type
+}
+
+# @keywords internal
+is_nullable_avro <- function(avro_type) {
+  is.list(avro_type) && length(avro_type) == 2 && "null" %in% avro_type
+}
+
+# @keywords internal
+avro_primitive_to_spark <- function(sc, avro_type) {
+  switch(
+    avro_type,
+    string = string_type(sc),
+    int = integer_type(sc),
+    long = long_type(sc),
+    float = float_type(sc),
+    double = double_type(sc),
+    boolean = boolean_type(sc),
+    bytes = binary_type(sc),
+    string_type(sc)
+  )
+}
